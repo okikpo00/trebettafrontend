@@ -1,0 +1,141 @@
+/* PROFILE PAGE BASE */
+.profile-page {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 80px;
+}
+
+.profile-page-center {
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* HEADER */
+.profile-header {
+  background: var(--card);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.profile-username {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.profile-email {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+/* SECTION */
+.profile-section {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.profile-section-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  padding: 14px 16px;
+  opacity: 0.75;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* LIST ITEM */
+.profile-item {
+  padding: 16px;
+  font-size: var(--font-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.profile-item:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.profile-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.profile-item-label {
+  font-weight: 500;
+}
+
+/* KYC ROW */
+.profile-kyc-row {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-kyc-title {
+  font-size: var(--font-md);
+  font-weight: 600;
+}
+
+.profile-kyc-sub {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+/* KYC BADGES */
+.kyc-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: white;
+}
+
+.kyc-pending {
+  background: #f59e0b;
+}
+
+.kyc-approved {
+  background: #16a34a;
+}
+
+.kyc-rejected {
+  background: #dc2626;
+}
+
+.kyc-none {
+  background: #64748b;
+}
+
+/* LOGOUT BUTTON */
+.profile-logout-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: white;
+  font-size: var(--font-md);
+  font-weight: 600;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow: var(--shadow-soft);
+}
+
+.profile-logout-btn:hover {
+  opacity: 0.9;
+}

@@ -1,0 +1,430 @@
+/* src/css/pools.css */
+
+/* PAGE WRAPPER */
+.pool-page {
+  padding-top: clamp(12px, 2vw, 24px);
+  padding-bottom: clamp(16px, 2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+/* HEADER */
+.pool-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pool-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.pool-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.pool-type-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pool-type-badge.pulse {
+  background: rgba(148, 27, 41, 0.08);
+  color: var(--accent);
+}
+
+.pool-type-badge.grand {
+  background: rgba(250, 204, 21, 0.12);
+  color: #b45309;
+}
+
+/* STATUS & META */
+.pool-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.pool-status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+}
+
+.pool-status-pill.open {
+  background: rgba(22, 163, 74, 0.14);
+  color: var(--success);
+}
+
+.pool-status-pill.locked {
+  background: rgba(251, 191, 36, 0.14);
+  color: #b45309;
+}
+
+.pool-status-pill.settled,
+.pool-status-pill.closed,
+.pool-status-pill.rollover {
+  background: rgba(15, 23, 42, 0.14);
+  color: var(--muted);
+}
+
+/* COUNTDOWN */
+.pool-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+/* TOP STATS CARD */
+.pool-metrics-card {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+  gap: var(--gap-sm);
+}
+
+@media (max-width: 768px) {
+  .pool-metrics-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pool-progress-card,
+.pool-stats-card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.pool-metric-label {
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+.pool-metric-value {
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* PROGRESS BAR */
+.pool-progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--glass);
+  overflow: hidden;
+  margin-top: 8px;
+  position: relative;
+}
+
+.pool-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.pool-progress-fill.pulse {
+  background: linear-gradient(90deg, var(--accent), var(--accent-600));
+}
+
+.pool-progress-fill.grand {
+  background: linear-gradient(90deg, #facc15, #eab308);
+}
+
+.pool-progress-percent {
+  margin-top: 6px;
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+/* DESCRIPTION */
+.pool-description-card {
+  margin-top: 8px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* OPTIONS */
+.pool-options-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pool-options-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pool-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+/* OPTION CARD */
+.pool-option-card {
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.08s ease;
+}
+
+.pool-option-card:hover {
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+.pool-option-card.selected {
+  border-color: var(--accent);
+}
+
+.pool-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.pool-option-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+}
+
+.pool-option-chip {
+  font-size: var(--font-xs);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.pool-option-chip.your-pick {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--success);
+}
+
+.pool-option-chip.status-eliminated {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.pool-option-chip.status-won {
+  background: rgba(250, 204, 21, 0.12);
+  color: #b45309;
+}
+
+.pool-option-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+/* WINMETER */
+.winmeter-card {
+  margin-top: 8px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.winmeter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.winmeter-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+}
+
+.winmeter-amount {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.winmeter-subtext {
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+/* WINMETER GLOW BAR (SportyBet-style) */
+.winmeter-bar-track {
+  position: relative;
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: radial-gradient(circle at 0% 50%, rgba(248, 250, 252, 0.2), rgba(15, 23, 42, 0.9));
+}
+
+.winmeter-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+  transition: width 0.5s ease;
+}
+
+[data-theme="dark"] .winmeter-bar-track {
+  background: radial-gradient(circle at 0% 50%, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
+}
+
+/* JOIN CTA */
+.pool-join-strip {
+  margin-top: 10px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pool-join-info {
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+/* SHARE SLIP BUTTON WRAP */
+.pool-share-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+/* LOADING */
+.pool-skeleton-card {
+  padding: 12px 14px;
+}
+
+/* SMALL UTIL */
+.badge-sm {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+}
+
+.pool-option-card.winner {
+  border-color: #eab308;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);
+}
+
+.pool-option-card.eliminated {
+  opacity: 0.55;
+}
+
+.pool-option-card.selected {
+  border-color: var(--accent);
+}
+.pool-locked-banner {
+  margin-top: 6px;
+  background: rgba(251, 191, 36, 0.12);
+  padding: 10px;
+  border-radius: var(--radius-md);
+  color: #facc15;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+.pool-winmeter-card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.winmeter-amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.winmeter-amount-main {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.winmeter-chart-wrap {
+  width: 100%;
+  overflow-x: auto;
+  padding-top: 4px;
+}
+
+.winmeter-loading {
+  padding: 12px 0;
+  text-align: center;
+}
+.winmeter-confidence {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.conf-low {
+  background: rgba(255, 75, 75, 0.12);
+  color: #d7263d;
+}
+
+.conf-mid {
+  background: rgba(255, 199, 0, 0.15);
+  color: #b68b00;
+}
+
+.conf-high {
+  background: rgba(56, 217, 125, 0.15);
+  color: #118c4f;
+}
+
+.conf-percent {
+  opacity: 0.8;
+}

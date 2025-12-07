@@ -1,0 +1,294 @@
+/* src/css/kyc.css */
+
+/* PAGE WRAPPER */
+.kyc-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* INTRO / INFO CARD */
+.kyc-intro-text {
+  margin-bottom: 4px;
+}
+
+.kyc-info-card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  border: 1px solid rgba(148, 27, 41, 0.08);
+  box-shadow: var(--shadow-soft);
+}
+
+.kyc-info-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.kyc-bullet-list {
+  padding-left: 16px;
+  margin: 0;
+}
+
+.kyc-bullet-list li {
+  margin-bottom: 2px;
+}
+
+/* FORM LAYOUT */
+.kyc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* UPLOAD GRID */
+.kyc-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .kyc-upload-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* UPLOAD CARDS */
+.kyc-upload-card,
+.kyc-selfie-card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kyc-upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.kyc-upload-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+}
+
+.kyc-upload-pill {
+  font-size: var(--font-xs);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(127, 29, 29, 0.08);
+  color: var(--accent);
+}
+
+.kyc-upload-hint {
+  margin-bottom: 4px;
+}
+
+/* DROP AREA */
+.kyc-upload-drop {
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.kyc-upload-drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.kyc-upload-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.kyc-upload-main {
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.kyc-upload-loading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* PREVIEW */
+.kyc-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kyc-preview-img {
+  width: 100%;
+  max-height: 220px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.kyc-preview-img-selfie {
+  object-position: center;
+}
+
+.kyc-change-btn {
+  align-self: flex-start;
+}
+
+/* SELFIE SECTION */
+.kyc-selfie-card {
+  margin-top: 4px;
+}
+
+.kyc-camera-btn {
+  margin-top: 4px;
+}
+
+.kyc-selfie-live {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kyc-selfie-video {
+  width: 100%;
+  max-height: 260px;
+  border-radius: var(--radius-md);
+  background: #000;
+}
+
+.kyc-selfie-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* SELFIE PREVIEW */
+.kyc-selfie-preview {
+  margin-top: 8px;
+}
+
+/* SUBMIT ROW */
+.kyc-submit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* STATUS CARD */
+.kyc-status-card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-soft);
+}
+
+.kyc-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* STATUS PILL */
+.kyc-status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+}
+
+.kyc-status-pill-none {
+  background: rgba(148, 163, 184, 0.18);
+  color: #475569;
+}
+
+.kyc-status-pill-pending {
+  background: rgba(251, 191, 36, 0.18);
+  color: #92400e;
+}
+
+.kyc-status-pill-approved {
+  background: rgba(22, 163, 74, 0.2);
+  color: #15803d;
+}
+
+.kyc-status-pill-rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+.kyc-status-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kyc-status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kyc-status-label {
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+.kyc-status-value {
+  font-size: var(--font-xs);
+  font-weight: 500;
+}
+
+.kyc-status-reason {
+  margin-top: 4px;
+}
+
+.kyc-status-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.kyc-status-thumb {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kyc-status-thumb-label {
+  color: var(--muted);
+}
+
+.kyc-status-thumb-img {
+  width: 100%;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+}

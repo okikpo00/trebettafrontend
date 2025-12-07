@@ -1,0 +1,265 @@
+/* MY POOLS PAGE */
+.mypools-page {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mypools-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.mypools-section-title {
+  margin-bottom: 8px;
+  font-size: var(--font-md);
+  font-weight: 600;
+}
+
+.mypools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* CARD */
+.mypool-card {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mypool-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mypool-type-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-xs);
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(127, 29, 29, 0.08);
+  color: var(--accent);
+}
+
+.mypool-status {
+  font-size: var(--font-xs);
+  font-weight: 600;
+}
+
+.mypool-status.won {
+  color: #16a34a;
+}
+.mypool-status.lost {
+  color: #dc2626;
+}
+.mypool-status.refund {
+  color: #d97706;
+}
+.mypool-status.joined {
+  color: #475569;
+}
+
+.mypool-title {
+  font-size: var(--font-md);
+  font-weight: 600;
+}
+
+.mypool-stake-row,
+.mypool-winmeter-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mypool-label {
+  font-size: var(--font-sm);
+  color: #6b7280;
+}
+
+.mypool-value {
+  font-size: var(--font-sm);
+  font-weight: 600;
+}
+
+.mypool-btn {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  align-items: center;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-sm);
+}
+
+/* EMPTY STATE */
+.mypool-empty {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.mypool-empty-icon {
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.mypool-empty-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+}
+
+/* Toggle for Active / Settled */
+.mypools-toggle {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.15);
+  margin-bottom: 8px;
+}
+
+.mypools-toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  cursor: pointer;
+}
+
+.mypools-toggle-btn-active {
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Actions for settled cards */
+.mypool-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mypool-btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid rgba(127, 29, 29, 0.5);
+}
+
+.mypool-pick-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ================================================
+   TREBETTA PREMIUM DARK MODE + POLISH (SAFE ADD-ON)
+   ================================================ */
+
+/* PAGE */
+[data-theme="dark"] .mypools-page {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* CARD POLISH */
+.mypool-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+[data-theme="dark"] .mypool-card {
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* TITLE */
+[data-theme="dark"] .mypool-title {
+  color: var(--text);
+}
+
+/* LABEL / VALUE */
+[data-theme="dark"] .mypool-label {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .mypool-value {
+  color: var(--text);
+}
+
+/* PILL (Pulse / Grand) */
+[data-theme="dark"] .mypool-type-pill {
+  background: rgba(127, 29, 29, 0.35);
+  color: var(--text);
+}
+
+/* STATUS COLORS (already premium but adjusted for dark mode) */
+[data-theme="dark"] .mypool-status.joined {
+  color: var(--muted);
+}
+[data-theme="dark"] .mypool-status.won {
+  color: #22c55e;
+}
+[data-theme="dark"] .mypool-status.lost {
+  color: #ef4444;
+}
+[data-theme="dark"] .mypool-status.refund {
+  color: #fbbf24;
+}
+
+/* BUTTONS */
+[data-theme="dark"] .mypool-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+[data-theme="dark"] .mypool-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+}
+
+/* TOGGLE GROUP */
+.mypools-toggle {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 999px;
+  padding: 4px;
+  transition: background 0.25s ease;
+}
+
+[data-theme="dark"] .mypools-toggle {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* TOGGLE BUTTONS */
+[data-theme="dark"] .mypools-toggle-btn {
+  color: var(--text);
+}
+
+[data-theme="dark"] .mypools-toggle-btn-active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+/* EMPTY GROUP */
+[data-theme="dark"] .mypools-empty-group {
+  color: var(--muted);
+}
+
+/* LOADER AREA */
+[data-theme="dark"] .mypools-loader {
+  background: var(--bg);
+}
+.mypool-status.locked {
+  color: #d97706; /* warm amber (alert-but-not-danger) */
+}

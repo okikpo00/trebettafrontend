@@ -1,0 +1,389 @@
+/* ============================
+   TREBETTA SLIP PAGE LAYOUT
+   ============================ */
+
+.slip-page {
+  padding: 12px 16px 80px;
+}
+
+.slip-page-center {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Back button */
+.slip-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+/* Wrapper to center slip */
+.slip-share-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+/* Actions (share button) */
+.slip-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Share button override */
+.slip-share-btn {
+  min-width: 220px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 999px;
+}
+
+/* ============================
+   BASE CARD STYLE (used by both)
+   ============================ */
+
+.slip-share-card,
+.slip-card-premium {
+  position: relative;
+  max-width: 420px;
+  width: 100%;
+  border-radius: 18px;
+  padding: 18px 18px 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+  border: 1px solid rgba(138, 13, 13, 0.14); /* oxblood tint */
+}
+
+/* Top gradient strip */
+.slip-share-card::before,
+.slip-card-premium::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(138, 13, 13, 0.08), transparent 55%),
+    radial-gradient(circle at 0% 0%, rgba(138, 13, 13, 0.18), transparent 60%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Inner content wrapper to stay above overlay */
+.slip-share-card > *,
+.slip-card-premium > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Diagonal watermark text (subtle) */
+.slip-card-premium::after,
+.slip-share-card::after {
+  content: "TREBETTA";
+  position: absolute;
+  font-size: 60px;
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.03);
+  letter-spacing: 0.4em;
+  transform: rotate(-24deg);
+  right: -40px;
+  top: 42%;
+  pointer-events: none;
+}
+
+/* ============================
+   BRAND HEADER
+   ============================ */
+
+.slip-header-brand,
+.slip-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.slip-logo,
+.slip-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8a0d0d, #b11212);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(138, 13, 13, 0.45);
+}
+
+.slip-brand-text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+}
+
+.slip-brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #181818;
+}
+
+.slip-brand-tag,
+.slip-brand-tagline {
+  font-size: 11px;
+  color: #666;
+}
+
+/* ============================
+   BADGE
+   ============================ */
+
+.slip-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.slip-badge-entry {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.slip-badge-win {
+  background: rgba(251, 191, 36, 0.14);
+  color: #b45309;
+}
+
+.slip-badge-loss {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.slip-badge-refund {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+}
+
+/* ============================
+   AMOUNT / RESULT BLOCK
+   ============================ */
+
+.slip-amount-block {
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+.slip-amount-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.slip-amount-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.slip-amount-main svg {
+  margin-right: 4px;
+}
+
+/* Winning style */
+.slip-gold {
+  color: #b45309;
+}
+
+/* Loss */
+.slip-loss {
+  font-size: 16px;
+  color: #b91c1c;
+}
+
+/* Refund */
+.slip-refund {
+  color: #1d4ed8;
+}
+
+/* ============================
+   INFO GRID
+   ============================ */
+
+.slip-info-block {
+  margin-top: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed rgba(0, 0, 0, 0.06);
+  padding: 10px 10px 8px;
+}
+
+.slip-info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 12px;
+}
+
+.slip-info-label {
+  font-size: 12px;
+  color: #777;
+  font-weight: 500;
+}
+
+.slip-info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  text-align: right;
+}
+
+.slip-info-value-option,
+.slip-option {
+  font-weight: 700;
+  color: #8a0d0d;
+}
+
+/* ============================
+   FOOTER ROW
+   ============================ */
+
+.slip-footer-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  gap: 12px;
+}
+
+.slip-footer-col {
+  flex: 1;
+}
+
+.slip-footer-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.slip-footer-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* ============================
+   VERIFIED STAMP
+   ============================ */
+
+.slip-stamp {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 13, 13, 0.24);
+  background: rgba(138, 13, 13, 0.02);
+}
+
+.slip-stamp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+/* ============================
+   DARK THEME SUPPORT
+   ============================ */
+
+[data-theme="dark"] .slip-share-card,
+[data-theme="dark"] .slip-card-premium {
+  background: #111111;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.9);
+}
+
+[data-theme="dark"] .slip-brand-name {
+  color: #f4f4f4;
+}
+
+[data-theme="dark"] .slip-brand-tag,
+[data-theme="dark"] .slip-brand-tagline {
+  color: #aaa;
+}
+
+[data-theme="dark"] .slip-amount-label {
+  color: #aaa;
+}
+
+[data-theme="dark"] .slip-amount-main {
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .slip-info-block {
+  background: rgba(15, 15, 15, 0.95);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .slip-info-label {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .slip-info-value {
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .slip-footer-label {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .slip-footer-value {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .slip-stamp {
+  border-color: rgba(248, 250, 252, 0.24);
+  background: rgba(148, 27, 27, 0.12);
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+
+@media (max-width: 480px) {
+  .slip-share-card,
+  .slip-card-premium {
+    padding: 16px 14px 18px;
+    border-radius: 16px;
+  }
+
+  .slip-brand-name {
+    font-size: 14px;
+  }
+
+  .slip-amount-main {
+    font-size: 20px;
+  }
+}

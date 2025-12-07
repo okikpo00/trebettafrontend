@@ -1,0 +1,148 @@
+/* ============================================
+   THEME.CSS — Trebetta Fluid Design System
+   ============================================ */
+
+:root {
+  /* ===== Brand Colors (Light Mode) ===== */
+  --bg: #ffffff;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --accent: #5f0000; /* Trebetta Oxblood */
+  --accent-600: #4b0000;
+  --success: #16a34a;
+  --danger: #810303;
+  --glass: rgba(15, 21, 34, 0.04);
+
+  /* ===== Shadows & Radius ===== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 6px 18px rgba(2, 6, 23, 0.06);
+
+  /* ===== Fluid Spacing Scale (responsive) ===== */
+  --gap-xs: clamp(4px, 0.6vw, 6px);
+  --gap-sm: clamp(8px, 1vw, 12px);
+  --gap: clamp(12px, 1.4vw, 18px);
+  --gap-lg: clamp(20px, 2vw, 28px);
+
+  /* ===== Typography ===== */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial;
+  --font-xs: clamp(12px, 1vw, 13px);
+  --font-sm: clamp(13px, 1.1vw, 14px);
+  --font-md: clamp(14px, 1.3vw, 16px);
+  --font-lg: clamp(18px, 2vw, 22px);
+  --font-xl: clamp(22px, 2.6vw, 28px);
+
+  /* ===== Responsive Breakpoints ===== */
+  --bp-xs: 420px;
+  --bp-sm: 600px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1440px;
+
+  /* ===== Container Width ===== */
+  --container-max: 1200px;
+}
+
+/* ===== Dark Theme Overrides ===== */
+[data-theme="dark"] {
+  --bg: #0b0b0c;
+  --card: #0f1724;
+  --text: #e6eef8;
+  --muted: #9aa6b2;
+  --accent: #7a0000;
+  --accent-600: #a10000;
+  --glass: rgba(255, 255, 255, 0.03);
+}
+
+/* ===== Base Fluid Typography ===== */
+html {
+  font-family: var(--font-sans);
+  font-size: var(--font-md);
+  scroll-behavior: smooth;
+}
+
+/* ===== Container Helper ===== */
+.container {
+  width: min(100% - 2rem, var(--container-max));
+  margin-inline: auto;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-md);
+  padding: 0.6em 1em;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--font-sm);
+  transition: all 0.25s ease;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: var(--shadow-card);
+}
+
+.btn.primary:hover {
+  background: var(--accent-600);
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: clamp(14px, 2vw, 20px);
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* ===== Badges ===== */
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: var(--font-xs);
+}
+
+.badge.success {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+}
+.badge.warn {
+  background: rgba(253, 224, 71, 0.12);
+  color: #b45309;
+}
+.badge.danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+}
+
+/* ===== Grid System (Fluid) ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gap);
+}

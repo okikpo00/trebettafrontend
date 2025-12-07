@@ -1,0 +1,24 @@
+/* ============================================
+   LAYOUT.CSS — User Frontend Layout
+   ============================================ */
+
+.top-spacer {
+  height: clamp(64px, 8vh, 80px);
+}
+
+/* ensure content never hides behind topbar */
+@media (max-width: 680px) {
+  .top-spacer {
+    height: 64px;
+  }
+}
+
+/* small vertical spacing between stacked cards */
+.container > .card + .card {
+  margin-top: var(--gap);
+}
+
+/* adaptive padding for main sections */
+.main-content {
+  padding-bottom: clamp(80px, 12vh, 120px); /* space for bottom nav */
+}

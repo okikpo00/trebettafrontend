@@ -1,0 +1,38 @@
+@import "../styles/theme.css";
+
+.splash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--bg);
+  color: var(--accent);
+  transition: opacity 0.8s ease;
+  opacity: 1;
+}
+
+.splash.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--accent);
+  animation: heartbeat 1.8s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+[data-theme="dark"] .splash {
+  background-color: #000;
+}

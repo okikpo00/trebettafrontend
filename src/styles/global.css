@@ -75,7 +75,7 @@ img {
 /* ===== Dark Mode Inputs ===== */
 [data-theme="dark"] .input {
   border-color: rgba(255, 255, 255, 0.05);
-  background: #071022;
+  background: #000000;
   color: var(--text);
 }
 
@@ -134,11 +134,4 @@ img {
   .card {
     padding: 12px;
   }
-}
-:root {
-  --danger: #e63946; /* Strong premium red */
-}
-
-[data-theme="dark"] {
-  --danger: #ff6b6b; /* Softer red for dark mode */
 }

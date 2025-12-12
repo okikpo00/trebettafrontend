@@ -1,4 +1,7 @@
-/* src/css/home.css */
+/* =========================================
+   HOME.CSS – Trebetta Premium Homepage
+   Light + Dark Mode Aware
+   ========================================= */
 
 /* PAGE WRAPPER */
 .home-page {
@@ -26,405 +29,55 @@
   font-weight: 600;
 }
 
-/* BILLBOARD */
-.home-billboard {
-  display: flex;
-  gap: var(--gap);
-  align-items: stretch;
-}
-
-.home-billboard-main {
-  flex: 1.4;
-}
-
-.home-billboard-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 4px;
-}
-
-.home-billboard-title {
-  font-size: var(--font-lg);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.home-billboard-text {
-  margin-bottom: 10px;
-}
-
-.home-billboard-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.home-billboard-cta {
-  font-size: var(--font-sm);
-}
-
-.home-billboard-ghost {
-  font-size: var(--font-sm);
-}
-
-.home-billboard-media {
-  flex: 1;
-  max-width: 180px;
-  align-self: stretch;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.home-billboard-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.home-billboard-hint {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-/* POOL TABS */
-.pool-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.pool-tab {
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 8px 10px;
-  background: var(--card);
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: all 0.2s ease;
-}
-
-.pool-tab-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  font-size: var(--font-sm);
-}
-
-.pool-tab-active.pulse {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
-.pool-tab-active.grand {
-  background: linear-gradient(135deg, #eab308, #f59e0b);
-  color: #111827;
-  border-color: #eab308;
-}
-
-.pool-tab-active .pool-tab-sub {
-  color: inherit;
-}
-
-/* POOL CARDS */
-.home-pools-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.home-pools-loader {
-  padding: 18px 0;
-}
-
-.home-empty-state {
-  padding: 10px 2px;
-}
-
-.pool-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.pool-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.pool-card-title-block {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.pool-card-title {
-  font-size: var(--font-md);
-  font-weight: 600;
-}
-
-.pool-type-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: var(--font-xs);
-  font-weight: 600;
-}
-
-.pool-type-pill.pulse {
-  background: rgba(239, 68, 68, 0.12);
-  color: #b91c1c;
-}
-
-.pool-type-pill.grand {
-  background: rgba(234, 179, 8, 0.16);
-  color: #92400e;
-}
-
-.pool-card-meta {
-  display: flex;
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.pool-card-meta-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.pool-card-progress-row {
-  margin-top: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.pool-card-progress-bar {
-  width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.2);
-  overflow: hidden;
-}
-
-.pool-card-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  transform-origin: left;
-  transition: width 0.35s ease;
-}
-
-.pool-card-progress-fill.pulse {
-  background: linear-gradient(90deg, #22c55e, #16a34a);
-}
-
-.pool-card-progress-fill.grand {
-  background: linear-gradient(90deg, #eab308, #f97316);
-}
-
-.pool-card-progress-label {
-  align-self: flex-start;
-}
-
-.pool-card-footer {
-  margin-top: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.pool-card-footer-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.pool-card-cta {
-  white-space: nowrap;
-}
-
-/* TICKER STRIP */
-.ticker-strip {
-  position: relative;
-  overflow: hidden;
-  margin-top: 6px;
-}
-
-.ticker-track {
-  display: inline-flex;
-  align-items: stretch;
-  gap: 8px;
-  animation: ticker-scroll 28s linear infinite;
-}
-
-.ticker-card {
-  min-width: 220px;
-  max-width: 260px;
-}
-
-.ticker-card-inner {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  padding: 8px 10px;
-  border-radius: var(--radius-md);
-  background: var(--card);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-.ticker-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ticker-icon.activity {
-  background: rgba(59, 130, 246, 0.12);
-  color: #2563eb;
-}
-
-.ticker-icon.winner {
-  background: rgba(234, 179, 8, 0.1);
-  color: #eab308;
-}
-
-.ticker-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.ticker-title {
-  font-size: var(--font-sm);
-  font-weight: 500;
-}
-
-.ticker-meta {
-  margin-top: 2px;
-}
-
-.ticker-highlight {
-  font-weight: 600;
-}
-
-/* Fades at edges */
-.ticker-fade {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 30px;
-  pointer-events: none;
-}
-
-.ticker-fade-left {
-  left: 0;
-  background: linear-gradient(to right, var(--bg), transparent);
-}
-
-.ticker-fade-right {
-  right: 0;
-  background: linear-gradient(to left, var(--bg), transparent);
-}
-
-@keyframes ticker-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* JOIN OPTIONS IN MODAL (reusing wallet modal) */
-.join-options-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.join-option-pill {
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  padding: 6px 10px;
-  font-size: var(--font-xs);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  background: var(--card);
-}
-
-.join-option-pill input {
-  display: none;
-}
-
-.join-option-pill-active {
-  border-color: var(--accent);
-  background: rgba(127, 29, 29, 0.08);
-  color: var(--accent);
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-  .home-billboard {
-    flex-direction: column;
-  }
-
-  .home-billboard-media {
-    max-width: 100%;
-  }
-
-  .ticker-card {
-    min-width: 200px;
-  }
-}
 /* Refresh button */
 .home-refresh-btn {
-  border: 1px solid rgba(148, 163, 184, 0.6);
   border-radius: 999px;
   padding: 4px 10px;
   background: transparent;
   cursor: pointer;
+  font-size: var(--font-xs);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  color: var(--muted);
+  transition: all 0.18s ease;
 }
 
-.home-refresh-btn.small {
-  font-size: var(--font-xs);
+.home-refresh-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-0.5px);
+}
+
+[data-theme="dark"] .home-refresh-btn {
+  border-color: rgba(148, 163, 184, 0.4);
 }
 
 /* =========================================
-   HOMEPAGE BILLBOARD – CAROUSEL UPGRADE
+   HOMEPAGE BILLBOARD – HERO
    ========================================= */
 
 .home-billboard {
   display: flex;
   gap: var(--gap);
   align-items: stretch;
-  background: radial-gradient(circle at top left, #fef2f2, #f9fafb);
   border-radius: var(--radius-lg);
   padding: 14px 16px;
   position: relative;
   overflow: hidden;
+  background: radial-gradient(circle at top left,
+      rgba(138, 28, 28, 0.08),
+      rgba(249, 250, 251, 0.98)
+  );
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
+/* Dark mode hero */
 [data-theme="dark"] .home-billboard {
-  background: radial-gradient(circle at top left, #111827, #020617);
+  background: radial-gradient(circle at top left,
+      rgba(15, 23, 42, 0.9),
+      rgba(2, 6, 23, 0.98)
+  );
+  border-color: rgba(148, 163, 184, 0.24);
 }
 
 /* subtle diagonal overlay */
@@ -434,11 +87,20 @@
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(127, 29, 29, 0.12),
+    rgba(138, 28, 28, 0.14),
     transparent,
-    rgba(15, 23, 42, 0.4)
+    rgba(15, 23, 42, 0.2)
   );
   pointer-events: none;
+}
+
+[data-theme="dark"] .home-billboard::before {
+  background: linear-gradient(
+    135deg,
+    rgba(138, 28, 28, 0.23),
+    transparent,
+    rgba(15, 23, 42, 0.65)
+  );
 }
 
 .home-billboard-main {
@@ -454,7 +116,7 @@
   align-self: stretch;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(15, 23, 42, 0.96);
   box-shadow: var(--shadow-card);
 }
 
@@ -471,6 +133,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #e5e7eb;
 }
 
 /* Text */
@@ -518,9 +181,10 @@
   height: 7px;
   border-radius: 999px;
   border: none;
-  background: rgba(15, 23, 42, 0.25);
   padding: 0;
   cursor: pointer;
+  background: rgba(15, 23, 42, 0.25);
+  transition: all 0.18s ease;
 }
 
 [data-theme="dark"] .home-billboard-dot {
@@ -560,17 +224,240 @@
     min-height: 160px;
   }
 }
-/* Mini locked badge under pool title */
-.pool-status-locked {
-  display: inline-block;
-  margin-top: 4px;
-  padding: 2px 8px;
-  border-radius: 12px;
-  background: rgba(251, 191, 36, 0.15);
-  color: #facc15;
+
+/* =========================================
+   POOL TYPE TABS
+   ========================================= */
+
+.pool-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pool-tab {
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.2s ease;
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+[data-theme="dark"] .pool-tab {
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.pool-tab:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.pool-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: var(--font-sm);
+}
+
+.pool-tab-sub {
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+/* active tabs */
+.pool-tab-active.pulse {
+  background: radial-gradient(circle at top left,
+    rgba(138, 28, 28, 0.16),
+    var(--card)
+  );
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pool-tab-active.grand {
+  background: radial-gradient(circle at top right,
+    rgba(250, 204, 21, 0.3),
+    var(--card)
+  );
+  border-color: #eab308;
+  color: #92400e;
+}
+
+[data-theme="dark"] .pool-tab-active.pulse {
+  background: radial-gradient(circle at top left,
+    rgba(138, 28, 28, 0.4),
+    #020617
+  );
+}
+
+[data-theme="dark"] .pool-tab-active.grand {
+  background: radial-gradient(circle at top right,
+    rgba(250, 204, 21, 0.25),
+    #020617
+  );
+}
+
+.pool-tab-active .pool-tab-sub {
+  color: inherit;
+}
+
+/* =========================================
+   POOL CARDS ON HOME
+   ========================================= */
+
+.home-pools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-pools-loader {
+  padding: 18px 0;
+}
+
+.home-empty-state {
+  padding: 10px 2px;
+}
+
+/* Card shell */
+.pool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  transition: box-shadow 0.18s ease, transform 0.08s ease, border-color 0.18s ease;
+}
+
+[data-theme="dark"] .pool-card {
+  border-color: rgba(148, 163, 184, 0.33);
+}
+
+.pool-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+}
+
+[data-theme="dark"] .pool-card:hover {
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+}
+
+/* Header */
+.pool-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pool-card-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pool-card-title {
+  font-size: var(--font-md);
   font-weight: 600;
 }
-/* Locked progress bar effect */
+
+/* Type pills */
+.pool-type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+}
+
+.pool-type-pill.pulse {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.pool-type-pill.grand {
+  background: rgba(234, 179, 8, 0.16);
+  color: #92400e;
+}
+
+[data-theme="dark"] .pool-type-pill.pulse {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fecaca;
+}
+
+[data-theme="dark"] .pool-type-pill.grand {
+  background: rgba(250, 204, 21, 0.18);
+  color: #facc15;
+}
+
+/* Meta row */
+.pool-card-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+.pool-card-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Progress */
+.pool-card-progress-row {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pool-card-progress-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.28);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .pool-card-progress-bar {
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.pool-card-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transform-origin: left;
+  transition: width 0.35s ease;
+}
+
+.pool-card-progress-fill.pulse {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.pool-card-progress-fill.grand {
+  background: linear-gradient(90deg, #facc15, #f97316);
+}
+
+/* Locked visual (from your existing styles) */
+.pool-card.locked {
+  opacity: 0.9;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
 .pool-card-progress-fill.locked {
   background: repeating-linear-gradient(
     45deg,
@@ -580,8 +467,268 @@
     rgba(251, 191, 36, 0.3) 12px
   );
 }
-.pool-card.locked {
-  opacity: 0.85;
-  pointer-events: auto; /* still clickable */
-  border: 1px solid rgba(251, 191, 36, 0.2);
+
+/* Status */
+.pool-status-locked {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(251, 191, 36, 0.15);
+  color: #facc15;
+  font-weight: 600;
+  font-size: var(--font-xs);
+}
+
+/* Footer */
+.pool-card-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.pool-card-footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pool-card-cta {
+  white-space: nowrap;
+}
+
+/* =========================================
+   ACTIVITY / WINNER TICKER
+   ========================================= */
+
+.ticker-strip {
+  position: relative;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.ticker-track {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 8px;
+  animation: ticker-scroll 28s linear infinite;
+}
+
+.ticker-card {
+  min-width: 220px;
+  max-width: 260px;
+}
+
+.ticker-card-inner {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+[data-theme="dark"] .ticker-card-inner {
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.ticker-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ticker-icon.activity {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
+.ticker-icon.winner {
+  background: rgba(234, 179, 8, 0.16);
+  color: #eab308;
+}
+
+.ticker-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ticker-title {
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.ticker-meta {
+  margin-top: 2px;
+  font-size: var(--font-xs);
+  color: var(--muted);
+}
+
+.ticker-highlight {
+  font-weight: 600;
+}
+
+/* Fades at edges */
+.ticker-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30px;
+  pointer-events: none;
+}
+
+.ticker-fade-left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.ticker-fade-right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* =========================================
+   JOIN OPTIONS (MODAL PILLS)
+   ========================================= */
+
+.join-options-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.join-option-pill {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 6px 10px;
+  font-size: var(--font-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: var(--card);
+  transition: all 0.18s ease;
+}
+
+[data-theme="dark"] .join-option-pill {
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+.join-option-pill:hover {
+  border-color: var(--accent);
+}
+
+.join-option-pill input {
+  display: none;
+}
+
+.join-option-pill-active {
+  border-color: var(--accent);
+  background: rgba(127, 29, 29, 0.08);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .join-option-pill-active {
+  background: rgba(127, 29, 29, 0.36);
+}
+
+/* =========================================
+   MOBILE TWEAKS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .ticker-card {
+    min-width: 200px;
+  }
+}
+/* ======================================================
+   DARK MODE PATCH FOR HOMEPAGE — TREBETTA PREMIUM MODE
+   Forces all homepage texts + pills to become readable.
+   ====================================================== */
+
+[data-theme="dark"] .home-page,
+[data-theme="dark"] .home-page * {
+  color: var(--text) !important;
+}
+
+/* Force billboard text to use light text */
+[data-theme="dark"] .home-billboard-title,
+[data-theme="dark"] .home-billboard-text,
+[data-theme="dark"] .home-billboard-kicker {
+  color: var(--text) !important;
+}
+
+/* Tabs text */
+[data-theme="dark"] .pool-tab-label,
+[data-theme="dark"] .pool-tab-sub {
+  color: var(--text) !important;
+}
+
+/* Active Pulse tab */
+[data-theme="dark"] .pool-tab-active.pulse {
+  color: #fff !important;
+}
+
+/* Active Grand tab */
+[data-theme="dark"] .pool-tab-active.grand {
+  color: #000 !important; /* Grand uses yellow bg in dark mode */
+}
+
+/* Pool cards */
+[data-theme="dark"] .pool-card-title,
+[data-theme="dark"] .pool-card-meta,
+[data-theme="dark"] .pool-card-progress-label {
+  color: var(--text) !important;
+}
+
+/* Ticker text */
+[data-theme="dark"] .ticker-title,
+[data-theme="dark"] .ticker-meta {
+  color: var(--text) !important;
+}
+
+/* Pills override — make sure Pulse/Grand pills don’t use dark text */
+[data-theme="dark"] .pool-type-pill.pulse {
+  color: #fca5a5 !important; /* soft light red */
+}
+
+[data-theme="dark"] .pool-type-pill.grand {
+  color: #facc15 !important; /* soft yellow */
+}
+
+/* Locked badge */
+[data-theme="dark"] .pool-status-locked {
+  color: #facc15 !important;
+}
+
+/* Refresh button text */
+[data-theme="dark"] .home-refresh-btn {
+  color: var(--text) !important;
+  border-color: rgba(148, 163, 184, 0.4) !important;
+}
+
+/* Ticker icon color fix */
+[data-theme="dark"] .ticker-icon.activity {
+  color: #3b82f6 !important;
+}
+
+[data-theme="dark"] .ticker-icon.winner {
+  color: #facc15 !important;
 }

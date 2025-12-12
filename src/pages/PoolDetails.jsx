@@ -273,7 +273,7 @@ const showJoinStrip =
                 }}
               >
                 <div>
-                  <div className="pool-metric-label">Min entry</div>
+                  <div className="pool-metric-label">Entry</div>
                   <div className="pool-metric-value">
                     ₦
                     {Number(pool.min_entry || 0).toLocaleString("en-NG", {
@@ -452,7 +452,7 @@ const showJoinStrip =
             <section className="pool-join-strip">
               <div className="pool-join-info">
                 <div className="small">
-                  Min entry: ₦
+                  Entry: ₦
                   {Number(pool.min_entry || 0).toLocaleString("en-NG", {
                     maximumFractionDigits: 0,
                   })}

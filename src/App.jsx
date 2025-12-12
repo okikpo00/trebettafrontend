@@ -6,6 +6,7 @@ import SplashPage from "./pages/SplashPage";
 import Home from "./pages/Home";
 import MyPools from "./pages/MyPools";
 import Wallet from "./pages/Wallet";
+import PendingDeposit from "./pages/PendingDeposit";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import KycStatus from "./pages/KycStatus";
@@ -115,6 +116,10 @@ const App = () => {
                     path="/wallet"
                     element={isLoggedIn ? <Wallet /> : <Navigate to="/login" />}
                   />
+                  
+ 
+<Route path="/wallet/deposit/pending" element={<PendingDeposit />} />
+
                   <Route
                     path="/profile"
                     element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}

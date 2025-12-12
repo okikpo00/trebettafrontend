@@ -1,41 +1,48 @@
 // src/pages/Wallet.jsx
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import "../css/wallet.css";
 
-import BalanceCard from "../components/BalanceCard";
 import TransactionList from "../components/TransactionList";
-import DepositModal from "../components/DepositModal";
-import WithdrawModal from "../components/WithdrawModal";
-import CreatePinModal from "../components/CreatePinModal";
 import Toast from "../components/Toast";
 import Loader from "../components/Loader";
 import { WalletContext } from "../context/WalletContext";
+import CreatePinModal from "../components/CreatePinModal";
+
+import DepositSheet from "../components/DepositSheet";
+import WithdrawSheet from "../components/WithdrawSheet";
+import OtpSheet from "../components/OtpSheet";
+import SavedAccountsSheet from "../components/SavedAccountsSheet";
+import PendingDepositBanner from "../components/PendingDepositBanner";
 
 export default function Wallet() {
+  const navigate = useNavigate();
   const { wallet, walletLoading, refreshWallet } = useContext(WalletContext);
 
   const [transactions, setTransactions] = useState([]);
   const [txLoading, setTxLoading] = useState(false);
 
-  const [showDeposit, setShowDeposit] = useState(false);
-  const [showWithdraw, setShowWithdraw] = useState(false);
-  const [showCreatePin, setShowCreatePin] = useState(false);
-
   const [toast, setToast] = useState(null);
 
-  const [txPage] = useState(1);
-  const [txLimit] = useState(30);
+  // central single-sheet control
+  const [activeSheet, setActiveSheet] = useState(null);
+  // values: null | "deposit" | "withdraw" | "otp" | "savedAccounts"
 
-  const showToast = (message, type = "success") => {
+  const [pendingDeposit, setPendingDeposit] = useState(null);
+  const [pendingWithdraw, setPendingWithdraw] = useState(null);
+
+  const [showCreatePin, setShowCreatePin] = useState(false);
+
+  const showToast = (message, type = "success") =>
     setToast({ message, type });
-  };
 
+  // ---- Load transactions ----
   const fetchTransactions = async () => {
     setTxLoading(true);
     try {
       const res = await api.get("/wallet/transactions", {
-        params: { page: txPage, limit: txLimit },
+        params: { page: 1, limit: 10 },
       });
       if (res.data?.status && Array.isArray(res.data.data)) {
         setTransactions(res.data.data);
@@ -52,12 +59,27 @@ export default function Wallet() {
     }
   };
 
-  // Initial load: wallet + tx + PIN check
+  // ---- Load pending deposit from backend ----
+  const fetchPendingDeposit = async () => {
+    try {
+      const res = await api.get("/wallet/deposit/pending");
+      if (res.data?.status && res.data.data) {
+        setPendingDeposit(res.data.data);
+      } else {
+        setPendingDeposit(null);
+      }
+    } catch (err) {
+      console.warn("Failed to load pending deposit", err);
+    }
+  };
+
+  // ---- Initial load: wallet + tx + PIN check + pending deposit ----
   useEffect(() => {
     refreshWallet();
     fetchTransactions();
+    fetchPendingDeposit();
 
-    // Prefer backend-driven has_pin from stored user profile if available
+    // PIN modal logic
     let hasPinFromProfile = null;
     try {
       const rawUser =
@@ -70,24 +92,16 @@ export default function Wallet() {
           hasPinFromProfile = parsed.has_pin;
         }
       }
-    } catch (e) {
-      // ignore parse errors
-    }
+    } catch (_) {}
 
     const localFlag = localStorage.getItem("trebetta_has_pin");
 
-    if (localFlag === "yes") {
-      // already knows user has PIN
-      return;
-    }
-
+    if (localFlag === "yes") return;
     if (hasPinFromProfile === true) {
-      // backend says user already has PIN – never show modal
       localStorage.setItem("trebetta_has_pin", "yes");
       return;
     }
 
-    // Either backend says no PIN, or we don't know yet → ask user to create
     setShowCreatePin(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -95,14 +109,37 @@ export default function Wallet() {
   const handleRefresh = () => {
     refreshWallet();
     fetchTransactions();
+    fetchPendingDeposit();
   };
 
-  const handleDepositSuccess = () => {
-    refreshWallet();
-    fetchTransactions();
+  // ensure only one sheet is open at a time
+  const openOnly = (sheet) => {
+    setActiveSheet(sheet);
   };
 
-  const handleWithdrawSuccess = () => {
+  // callbacks used by sheets
+  const handleDepositCreated = (depositData) => {
+    setActiveSheet(null);
+    setPendingDeposit(depositData);
+
+    try {
+      sessionStorage.setItem("trebetta_pending_deposit", JSON.stringify(depositData));
+    } catch (_) {}
+
+    // navigate to existing pending deposit page (keeps your current flow)
+    navigate("/wallet/deposit/pending", { state: { deposit: depositData } });
+  };
+
+  const handleWithdrawInitiated = (withdrawData) => {
+    setPendingWithdraw(withdrawData);
+    // close withdraw sheet, open OTP sheet
+    setActiveSheet("otp");
+  };
+
+  const handleWithdrawConfirmed = () => {
+    setActiveSheet(null);
+    setPendingWithdraw(null);
+    showToast("Withdrawal is now processing", "success");
     refreshWallet();
     fetchTransactions();
   };
@@ -112,89 +149,149 @@ export default function Wallet() {
     setShowCreatePin(false);
   };
 
+  const currentBalance = wallet?.balance || 0;
+
   return (
-    <div className="wallet-page container">
-      <div className="wallet-header space-between">
-        <div className="wallet-title-block">
+    <div className="wallet-page container oxblood-theme">
+      {/* HEADER */}
+      <div className="wallet-header">
+        <div className="wallet-header-left">
           <h1 className="wallet-title">Wallet</h1>
           <p className="wallet-subtitle small muted">
-            Fund your Trebetta wallet and withdraw securely to your bank.
+             manage deposits, withdrawals and activity.
           </p>
         </div>
-        <button
-          className="btn ghost wallet-refresh-btn"
-          type="button"
-          onClick={handleRefresh}
-        >
-          ↻ Refresh
-        </button>
+
+        <div className="wallet-header-actions">
+          <button className="btn ghost wallet-refresh-btn" type="button" onClick={handleRefresh}>
+            ↻ Refresh
+          </button>
+        </div>
       </div>
 
-      <section className="wallet-top-section">
-        <div className="wallet-balance-wrapper">
-          {walletLoading ? (
-            <div className="card wallet-balance-card skeleton">
-              <div className="wallet-balance-label skeleton-bar" />
-              <div className="wallet-balance-value skeleton-bar" />
-              <div className="wallet-balance-actions skeleton-bar" />
-            </div>
-          ) : (
-            <BalanceCard
-              balance={wallet?.balance || 0}
-              currency={wallet?.currency || "NGN"}
-              onDeposit={() => setShowDeposit(true)}
-              onWithdraw={() => setShowWithdraw(true)}
+      {/* MAIN LAYOUT */}
+      <div className="wallet-grid">
+        {/* LEFT: Balance card + actions */}
+        <div className="wallet-left">
+          {/* PENDING DEPOSIT BANNER */}
+          {pendingDeposit && (
+            <PendingDepositBanner
+              deposit={pendingDeposit}
+              onViewDetails={() =>
+                navigate("/wallet/deposit/pending", { state: { deposit: pendingDeposit } })
+              }
             />
           )}
-        </div>
-      </section>
 
-      <section className="wallet-activity-section">
-        <div className="wallet-activity-header space-between">
-          <h2 className="wallet-activity-title">Recent Activity</h2>
-          {/* Future filters: All / Deposits / Withdrawals / Pools / Payouts */}
-        </div>
+          <div className="oxblood-card">
+            <div className="card-top">
+              <div className="card-brand">TREBETTA</div>
+              <div className="card-currency">NGN</div>
+            </div>
 
-        {txLoading ? (
-          <div className="wallet-tx-skeleton">
-            <Loader />
+            <div className="card-balance">
+              <div className="balance-label">Available balance</div>
+              <div className="balance-value">
+                ₦{Number(currentBalance).toLocaleString("en-NG", { maximumFractionDigits: 0 })}
+              </div>
+            </div>
+
+            <div className="card-meta">
+              <div className="card-note">Secure — powered by Sterling</div>
+            </div>
+
+            <div className="card-actions action-buttons">
+              <button
+                className={`btn primary ${activeSheet === "deposit" ? "active-action" : ""}`}
+                onClick={() => openOnly(activeSheet === "deposit" ? null : "deposit")}
+              >
+                Deposit
+              </button>
+
+              <button
+                className={`btn outline ${activeSheet === "withdraw" ? "active-action" : ""}`}
+                onClick={() => openOnly(activeSheet === "withdraw" ? null : "withdraw")}
+                disabled={walletLoading || Number(currentBalance) <= 0}
+              >
+                Withdraw
+              </button>
+
+              <button
+                className={`btn ghost ${activeSheet === "saved" ? "active-action" : ""}`}
+                onClick={() => openOnly(activeSheet === "saved" ? null : "saved")}
+              >
+                Saved Accounts
+              </button>
+            </div>
           </div>
-        ) : (
-          <TransactionList transactions={transactions} />
-        )}
-      </section>
 
-      {showDeposit && (
-        <DepositModal
-          onClose={() => setShowDeposit(false)}
-          onCompleted={handleDepositSuccess}
-          showToast={showToast}
-        />
-      )}
+          {/* small pro tips */}
+          <div className="wallet-protips small muted">
+             Use Deposits to fund pools. Withdrawals require PIN + OTP 
+          </div>
+        </div>
 
-      {showWithdraw && (
-        <WithdrawModal
-          onClose={() => setShowWithdraw(false)}
-          onCompleted={handleWithdrawSuccess}
-          showToast={showToast}
-        />
-      )}
+        {/* RIGHT: Activity / transactions */}
+        <div className="wallet-right">
+          <div className="wallet-activity-header">
+            <h2 className="wallet-activity-title">Recent activity</h2>
+          </div>
+
+          {txLoading ? (
+            <div className="wallet-tx-skeleton">
+              <Loader />
+            </div>
+          ) : transactions.length === 0 ? (
+            <div className="wallet-empty-state small muted">
+              No wallet transactions yet. Once you deposit, withdraw or get admin credits, they will show here.
+            </div>
+          ) : (
+            <TransactionList transactions={transactions} />
+          )}
+        </div>
+      </div>
+
+      {/* BOTTOM-SHEETS */}
+      <DepositSheet
+        isOpen={activeSheet === "deposit"}
+        onClose={() => setActiveSheet(null)}
+        onCreated={handleDepositCreated}
+        showToast={showToast}
+      />
+
+      <WithdrawSheet
+        isOpen={activeSheet === "withdraw"}
+        onClose={() => setActiveSheet(null)}
+        onInitiated={handleWithdrawInitiated}
+        showToast={showToast}
+      />
+
+      <OtpSheet
+        isOpen={activeSheet === "otp"}
+        onClose={() => setActiveSheet(null)}
+        withdrawData={pendingWithdraw}
+        onConfirmed={handleWithdrawConfirmed}
+        showToast={showToast}
+      />
+
+      <SavedAccountsSheet
+        isOpen={activeSheet === "saved"}
+        onClose={() => setActiveSheet(null)}
+        onSelectAccount={(acc) => {
+          // open withdraw sheet and preselect account via custom event (we'll use localStorage quick hack)
+          try {
+            localStorage.setItem("trebetta_selected_saved_account", JSON.stringify(acc));
+          } catch (_) {}
+          setActiveSheet("withdraw");
+        }}
+        showToast={showToast}
+      />
 
       {showCreatePin && (
-        <CreatePinModal
-          onClose={() => setShowCreatePin(false)}
-          onCreated={handlePinCreated}
-          showToast={showToast}
-        />
+        <CreatePinModal onClose={() => setShowCreatePin(false)} onCreated={handlePinCreated} showToast={showToast} />
       )}
 
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 }

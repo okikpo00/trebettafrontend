@@ -65,7 +65,7 @@ const countdown = isLocked ? "Locked" : formatCountdown(pool.countdown);
 
       <div className="pool-card-footer">
         <div className="pool-card-footer-left small">
-          <div>Min entry {formatCurrency(minEntry)}</div>
+          <div>Entry {formatCurrency(minEntry)}</div>
           {pool.total_stake != null && (
             <div className="muted">
               Total pool {formatCurrency(pool.total_stake)}

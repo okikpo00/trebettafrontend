@@ -24,7 +24,7 @@ export default function PoolTypeTabs({
             <span>Pulse Pools</span>
           </div>
           <div className="pool-tab-sub small muted">
-            Min entry ₦{pulseMin.toLocaleString("en-NG")}
+            Entry ₦{pulseMin.toLocaleString("en-NG")}
           </div>
         </button>
 
@@ -40,7 +40,7 @@ export default function PoolTypeTabs({
             <span>Grand Pools</span>
           </div>
           <div className="pool-tab-sub small muted">
-            Min entry ₦{grandMin.toLocaleString("en-NG")}
+            Entry ₦{grandMin.toLocaleString("en-NG")}
           </div>
         </button>
       </div>

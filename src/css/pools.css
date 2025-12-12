@@ -428,3 +428,7 @@
 .conf-percent {
   opacity: 0.8;
 }
+/* Fix option title color in dark mode */
+[data-theme="dark"] .pool-option-title {
+  color: var(--text) !important;
+}

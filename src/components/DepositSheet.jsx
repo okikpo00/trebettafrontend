@@ -3,32 +3,16 @@ import React, { useEffect, useState } from "react";
 import api from "../api";
 import BottomSheetPortal from "./BottomSheetPortal";
 
-const TREBETTA_ACCOUNTS = [
-  {
-    id: "sterling_primary",
-    bank_name: "Sterling Bank",
-    account_number: "0116012103",
-    account_name: "HORIZON BLUE BLISS GLOBAL",
-    support_phone: "+234 810 000 0000",
-  },
-  // add others here if you use multiple Trebetta receiving accounts
-];
+const SUPPORT_PHONE = "+234 810 000 0000"; // replace with real support phone
 
-export default function DepositSheet({
-  isOpen,
-  onClose,
-  onCreated,
-  showToast,
-}) {
+export default function DepositSheet({ isOpen, onClose, onCreated, showToast }) {
   const [amount, setAmount] = useState("");
   const [senderName, setSenderName] = useState("");
   const [senderBank, setSenderBank] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  // selected trebetta receiving account (visual only)
-  const [trebettaAccountId, setTrebettaAccountId] = useState(TREBETTA_ACCOUNTS[0].id);
-
+  // reset whenever sheet closes
   useEffect(() => {
     if (!isOpen) {
       setAmount("");
@@ -36,52 +20,46 @@ export default function DepositSheet({
       setSenderBank("");
       setResult(null);
       setLoading(false);
-      setTrebettaAccountId(TREBETTA_ACCOUNTS[0].id);
     }
   }, [isOpen]);
-
-  const selectedTrebetta = TREBETTA_ACCOUNTS.find(a => a.id === trebettaAccountId) || TREBETTA_ACCOUNTS[0];
-
-  const resetForm = () => {
-    setAmount("");
-    setSenderName("");
-    setSenderBank("");
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
 
-    const cleanAmount = Number(amount);
-    if (!cleanAmount || cleanAmount <= 0) {
+    const clean = Number(amount);
+    if (!clean || clean <= 0) {
       showToast("Enter a valid deposit amount", "error");
+      return;
+    }
+    if (!senderName || senderName.trim().length < 2) {
+      showToast("Enter sender account name", "error");
+      return;
+    }
+    if (!senderBank || senderBank.trim().length < 2) {
+      showToast("Enter sender bank", "error");
       return;
     }
 
     setLoading(true);
     try {
       const res = await api.post("/wallet/deposit/initiate", {
-        amount: cleanAmount,
-        sender_name: senderName,
-        sender_bank: senderBank,
+        amount: clean,
+        sender_name: senderName.trim(),
+        sender_bank: senderBank.trim(),
       });
 
       if (res.data?.status && res.data.data) {
+        const data = res.data.data;
+        setResult(data);
         showToast(res.data.message || "Deposit created", "success");
-        setResult(res.data.data);
-        onCreated(res.data.data);
-        resetForm();
+        // call onCreated so current app flow works
+        onCreated(data);
       } else {
-        showToast(
-          res.data?.message || "Could not create deposit",
-          "error"
-        );
+        showToast(res.data?.message || "Could not create deposit", "error");
       }
     } catch (err) {
-      showToast(
-        err?.response?.data?.message || "Deposit initiation failed",
-        "error"
-      );
+      showToast(err?.response?.data?.message || "Deposit initiation failed", "error");
     } finally {
       setLoading(false);
     }
@@ -98,92 +76,32 @@ export default function DepositSheet({
           {!result ? (
             <>
               <div className="bottom-sheet-header">
-                <h3 className="bottom-sheet-title">Deposit</h3>
-                <p className="bottom-sheet-subtitle small">
-                  Transfer the exact amount to the Trebetta account shown below.
-                </p>
+                <h3 className="bottom-sheet-title">Create deposit</h3>
+                <p className="bottom-sheet-subtitle small">Transfer the exact amount to Trebetta's account. Keep the reference.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="bottom-sheet-body">
                 <div className="form-group">
-                  <label>Pay to (Trebetta account)</label>
-                  <select
-                    className="input"
-                    value={trebettaAccountId}
-                    onChange={(e) => setTrebettaAccountId(e.target.value)}
-                  >
-                    {TREBETTA_ACCOUNTS.map((a) => (
-                      <option key={a.id} value={a.id}>
-                        {a.bank_name} • {a.account_number}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="tiny muted" style={{ marginTop: 6 }}>
-                    Support: <strong>{selectedTrebetta.support_phone}</strong>
-                  </div>
-                </div>
-
-                <div className="form-group">
                   <label>Amount (₦)</label>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    min="0"
-                    className="input"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="e.g. 5000"
-                    required
-                  />
+                  <input type="number" inputMode="numeric" min="0" className="input" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 5000" required />
                 </div>
 
                 <div className="form-group">
                   <label>Sender account name</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={senderName}
-                    onChange={(e) => setSenderName(e.target.value)}
-                    placeholder="Exact name on your bank app"
-                    required
-                  />
+                  <input type="text" className="input" value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="Exact name on your bank app" required />
                 </div>
 
                 <div className="form-group">
                   <label>Sender bank</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={senderBank}
-                    onChange={(e) => setSenderBank(e.target.value)}
-                    placeholder="e.g. GTBank, Access, Kuda..."
-                    required
-                  />
+                  <input type="text" className="input" value={senderBank} onChange={(e) => setSenderBank(e.target.value)} placeholder="e.g. GTBank, Access, Kuda..." required />
                 </div>
 
                 <div className="bottom-sheet-footer">
-                  <button
-                    type="button"
-                    className="btn ghost"
-                    onClick={onClose}
-                    disabled={loading}
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="btn primary"
-                    disabled={loading}
-                  >
-                    {loading ? "Creating..." : "Create deposit"}
-                  </button>
+                  <button type="button" className="btn ghost" onClick={onClose} disabled={loading}>Cancel</button>
+                  <button type="submit" className="btn primary" disabled={loading}>{loading ? "Creating..." : "Create deposit"}</button>
                 </div>
 
-                <p className="bottom-sheet-hint tiny">
-                  After creating a deposit, you’ll see Trebetta bank account details and have{" "}
-                  <strong>15 minutes</strong> to complete the transfer.
-                </p>
+                <p className="bottom-sheet-hint tiny">After creation you'll get Trebetta bank details below. You have 15 minutes to complete the transfer.</p>
               </form>
             </>
           ) : (
@@ -211,7 +129,7 @@ export default function DepositSheet({
                   }}>Copy account</button>
                 </div>
 
-                <div className="support tiny muted">Support: {selectedTrebetta.support_phone}</div>
+                <div className="support tiny muted">Support: {SUPPORT_PHONE}</div>
               </div>
             </div>
           )}

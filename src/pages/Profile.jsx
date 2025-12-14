@@ -143,7 +143,7 @@ export default function Profile() {
       <ProfileListSection title="Settings">
         <ProfileListItem
           label="Notifications"
-          onClick={() => navigate("/profile/notifications")}
+          onClick={() => navigate("/notifications")}
         />
         <ProfileListItem
           label="Delete Account"

@@ -1,4 +1,3 @@
-// src/components/HomeBillboard.jsx
 import React, { useEffect, useState } from "react";
 import "../css/home.css";
 
@@ -12,11 +11,8 @@ export default function HomeBillboard({ items = [], loading, onHowItWorks }) {
     if (!hasItems) return;
 
     const interval = setInterval(() => {
-      setActiveIndex((prev) => {
-        const next = prev + 1;
-        return next >= items.length ? 0 : next;
-      });
-    }, 6000); // 6s
+      setActiveIndex((prev) => (prev + 1 >= items.length ? 0 : prev + 1));
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [hasItems, items.length]);
@@ -30,58 +26,38 @@ export default function HomeBillboard({ items = [], loading, onHowItWorks }) {
 
   const handleClick = (item) => {
     if (!item?.redirect_link) return;
-
     const url = item.redirect_link.trim();
 
-    // External link
-    if (url.startsWith("http://") || url.startsWith("https://")) {
+    if (url.startsWith("http")) {
       window.open(url, "_blank", "noopener,noreferrer");
-      return;
-    }
-
-    // Internal route
-    if (url.startsWith("/")) {
-      window.location.href = url;
     } else {
-      // fallback: treat as path
-      window.location.href = `/${url}`;
+      window.location.href = url.startsWith("/") ? url : `/${url}`;
     }
   };
 
-  // Loading state
+  /* ---------------- Loading ---------------- */
   if (loading) {
     return (
-      <section className="home-billboard">
-        <div className="card home-billboard-skeleton">
-          <div className="skeleton-bar" />
-          <div className="skeleton-bar" />
-          <div className="skeleton-bar short" />
-        </div>
+      <section className="home-hero">
+        <div className="home-hero-skeleton" />
       </section>
     );
   }
 
-  // No items → fallback hero
+  /* ---------------- Empty State ---------------- */
   if (!hasItems) {
     return (
-      <section className="home-billboard card">
-        <div className="home-billboard-main">
-          <div className="home-billboard-kicker small muted">
-            TREND • PREDICT • WIN
-          </div>
-          <h1 className="home-billboard-title">
-            Welcome to Trebetta
-          </h1>
-          <p className="home-billboard-text small">
-            Join live pulse & grand pools on what&apos;s trending in Nigeria —
-            from football to reality TV. Lock your prediction and watch it play out.
+      <section className="home-hero">
+        <div className="home-hero-content">
+          <span className="home-hero-kicker">TREND • PREDICT • WIN</span>
+          <h1 className="home-hero-title">Welcome to Trebetta</h1>
+          <p className="home-hero-text">
+            Join live Pulse & Grand pools on what’s trending in Nigeria — from
+            football to reality TV. Lock your prediction and watch it play out.
           </p>
-          <div className="home-billboard-actions">
-            <button
-              type="button"
-              className="btn primary home-billboard-cta"
-              onClick={onHowItWorks}
-            >
+
+          <div className="home-hero-actions">
+            <button className="btn primary" onClick={onHowItWorks}>
               How Trebetta works
             </button>
           </div>
@@ -90,90 +66,73 @@ export default function HomeBillboard({ items = [], loading, onHowItWorks }) {
     );
   }
 
-  // We have billboard items
+  /* ---------------- Carousel ---------------- */
   const current = items[activeIndex];
 
   return (
-    <section className="home-billboard card home-billboard-carousel">
-      {/* Left: Text / CTA */}
-      <div className="home-billboard-main">
-        <div className="home-billboard-kicker small muted">
-          TREBETTA BILLBOARD
-        </div>
+    <section className="home-hero">
+      <div className="home-hero-inner">
+        {/* LEFT */}
+        <div className="home-hero-content">
+          <span className="home-hero-kicker"></span>
 
-        <h1 className="home-billboard-title">
-          {current.title || "Trebetta"}
-        </h1>
+          <h1 className="home-hero-title">
+            {current.title || "Trebetta"}
+          </h1>
 
-        {current.description && (
-          <p className="home-billboard-text small">
-            {current.description}
-          </p>
-        )}
-
-        <div className="home-billboard-actions">
-          {current.redirect_link && (
-            <button
-              type="button"
-              className="btn primary home-billboard-cta"
-              onClick={() => handleClick(current)}
-            >
-              Explore
-            </button>
+          {current.description && (
+            <p className="home-hero-text">{current.description}</p>
           )}
 
-          <button
-            type="button"
-            className="btn ghost home-billboard-ghost"
-            onClick={onHowItWorks}
-          >
-            How Trebetta works
-          </button>
+          <div className="home-hero-actions">
+            {current.redirect_link && (
+              <button
+                className="btn primary"
+                onClick={() => handleClick(current)}
+              >
+                Explore
+              </button>
+            )}
+            <button className="btn ghost" onClick={onHowItWorks}>
+              
+            </button>
+          </div>
+
+          {items.length > 1 && (
+            <div className="home-hero-dots">
+              {items.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={
+                    "hero-dot" +
+                    (idx === activeIndex ? " hero-dot-active" : "")
+                  }
+                  onClick={() => goTo(idx)}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Carousel dots */}
-        {items.length > 1 && (
-          <div className="home-billboard-dots">
-            {items.map((item, idx) => (
-              <button
-                key={item.id || idx}
-                type="button"
-                className={
-                  "home-billboard-dot" +
-                  (idx === activeIndex ? " home-billboard-dot-active" : "")
-                }
-                onClick={() => goTo(idx)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Right: Image / Video */}
-      <div
-        className="home-billboard-media"
-        onClick={() => handleClick(current)}
-        style={{ cursor: current.redirect_link ? "pointer" : "default" }}
-      >
-        {current.video_url ? (
-          <video
-            src={current.video_url}
-            className="home-billboard-media-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ) : current.image_url ? (
-          <img
-            src={current.image_url}
-            alt={current.title || "Trebetta billboard"}
-          />
-        ) : (
-          <div className="home-billboard-media-fallback small muted">
-            Trebetta
-          </div>
-        )}
+        {/* RIGHT */}
+        <div
+          className="home-hero-media"
+          onClick={() => handleClick(current)}
+        >
+          {current.video_url ? (
+            <video
+              src={current.video_url}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : current.image_url ? (
+            <img src={current.image_url} alt={current.title || "Trebetta"} />
+          ) : (
+            <div className="home-hero-media-fallback"></div>
+          )}
+        </div>
       </div>
     </section>
   );

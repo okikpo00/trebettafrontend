@@ -732,3 +732,127 @@
 [data-theme="dark"] .ticker-icon.winner {
   color: #facc15 !important;
 }
+
+/* ===============================
+   HOME HERO (Billboard)
+================================ */
+
+.home-hero {
+  margin: 1.2rem 0 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.home-hero-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--gap-lg);
+  padding: clamp(20px, 4vw, 40px);
+}
+
+@media (max-width: 900px) {
+  .home-hero-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Content */
+.home-hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-hero-kicker {
+  font-size: var(--font-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.home-hero-title {
+  font-size: var(--font-xl);
+  font-weight: 800;
+  margin: 0.4rem 0;
+  color: var(--text);
+}
+
+.home-hero-text {
+  max-width: 520px;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+/* Actions */
+.home-hero-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* Media */
+.home-hero-media {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--glass);
+}
+
+.home-hero-media img,
+.home-hero-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero-media-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 800;
+  opacity: 0.4;
+}
+
+/* Dots */
+.home-hero-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 1rem;
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  border: none;
+}
+
+[data-theme="dark"] .hero-dot {
+  background: rgba(255,255,255,0.25);
+}
+
+.hero-dot-active {
+  background: var(--accent);
+}
+
+/* Skeleton */
+.home-hero-skeleton {
+  height: 220px;
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.05),
+    rgba(0,0,0,0.1),
+    rgba(0,0,0,0.05)
+  );
+  animation: pulse 1.4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}

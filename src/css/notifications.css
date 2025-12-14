@@ -1,0 +1,123 @@
+.notifications-page {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.notifications-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-row {
+  display: flex;
+  gap: 12px;
+  padding: 14px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--glass);
+  transition: background 0.2s ease;
+}
+
+.notification-row:hover {
+  background: var(--glass);
+}
+
+.notification-row.unread {
+  background: rgba(138, 28, 28, 0.04);
+}
+
+[data-theme="dark"] .notification-row.unread {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  margin-top: 8px;
+  background: transparent;
+}
+
+.notification-row.unread .notification-dot {
+  background: var(--accent);
+}
+
+.notification-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notification-title {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.notification-message {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.notification-row.read .notification-title {
+  font-weight: 600;
+}
+
+.notifications-empty {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.empty-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.empty-text {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.notifications-load-more {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  margin-top: 8px;
+  background: transparent;
+}
+
+.notification-dot.info {
+  background: var(--accent);
+}
+.notification-dot.success {
+  background: var(--success);
+}
+.notification-dot.warning {
+  background: #f59e0b;
+}
+.notification-dot.danger {
+  background: var(--danger);
+}

@@ -185,3 +185,22 @@
 
 /* responsive */
 @media (max-width:920px) { .wallet-grid { grid-template-columns: 1fr; } .wallet-right { order:2; } .wallet-left { order:1; } .bottom-sheet { max-width: 100%; border-radius: 16px 16px 0 0; } }
+
+/* Wallet inputs – dark mode fix */
+[data-theme="dark"] .input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+[data-theme="dark"] select.input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .bottom-sheet,
+[data-theme="dark"] .bottom-sheet.luxe {
+  background: linear-gradient(180deg, #0b0b0b, #050505) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}

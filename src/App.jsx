@@ -149,7 +149,7 @@ const App = () => {
   element={<ContactSupport />}
 />
 <Route
-  path="/support/terms-privacy"
+  path="/support/terms"
   element={<TermsPrivacy />}
 />
 

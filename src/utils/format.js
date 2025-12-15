@@ -24,7 +24,7 @@ export function formatCountdown(seconds) {
   const days = Math.floor(totalMinutes / (60 * 24));
   const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
   const mins = totalMinutes % 60;
-  if (status === "locked") return "Locked";
+
 
 
   if (days > 0) {

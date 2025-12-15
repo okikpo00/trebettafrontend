@@ -1,27 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+// src/pages/VerifyEmail.jsx
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import api from "../api";
 import Toast from "../components/Toast";
 import "../css/auth.css";
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
-  const tokenFromQuery = searchParams.get("token") || "";
-  const [token, setToken] = useState(tokenFromQuery);
+
+  const tokenFromQuery = searchParams.get("token");
+  const emailFromState = location.state?.email;
+
+  const [token, setToken] = useState(tokenFromQuery || "");
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
-  useEffect(() => { if (tokenFromQuery) setToken(tokenFromQuery); }, [tokenFromQuery]);
+  // Auto-verify if token exists in URL
+  useEffect(() => {
+    if (!tokenFromQuery) return;
 
-  const handleSubmit = async (e) => {
-    e?.preventDefault();
-    if (!token) { setToast({ message: "Verification token required", type: "error" }); return; }
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await api.post("/auth/verify-email", { token: tokenFromQuery });
+        setToast({ message: res.data?.message || "Email verified", type: "success" });
+        setTimeout(() => navigate("/login"), 1200);
+      } catch (err) {
+        setToast({ message: err?.response?.data?.message || "Verification failed", type: "error" });
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [tokenFromQuery, navigate]);
+
+  const handleManualVerify = async (e) => {
+    e.preventDefault();
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await api.post("/auth/verify-email", { token });
       setToast({ message: res.data?.message || "Email verified", type: "success" });
-      setTimeout(() => navigate("/login"), 900);
+      setTimeout(() => navigate("/login"), 1200);
     } catch (err) {
       setToast({ message: err?.response?.data?.message || "Verification failed", type: "error" });
     } finally {
@@ -31,26 +53,34 @@ export default function VerifyEmail() {
 
   return (
     <div className="container-auth">
-      <div className="auth-card" role="main">
+      <div className="auth-card">
         <div className="auth-hero">
-          <div className="brand-title">Verify Email</div>
-          <div className="subtitle">Paste the verification token from your email or follow the link</div>
+          <div className="brand-title">Almost there 🎉</div>
+          <div className="subtitle">
+            {emailFromState
+              ? `We sent a verification link to ${emailFromState}`
+              : "Check your email to verify your account"}
+          </div>
         </div>
 
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="field">
-            <label>Verification token</label>
-            <input className="input" value={token} onChange={(e) => setToken(e.target.value)} placeholder="token from email" />
-          </div>
+        {!tokenFromQuery && (
+          <form className="form" onSubmit={handleManualVerify}>
+            <div className="field">
+              <label>Verification token</label>
+              <input className="input" value={token} onChange={(e) => setToken(e.target.value)} />
+            </div>
 
-          <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between" }}>
-            <div className="small"><Link to="/login" className="link">Back to login</Link></div>
-            <button type="submit" className="btn primary" disabled={loading}>{loading ? "Verifying..." : "Verify"}</button>
-          </div>
-        </form>
+            <div className="row actions">
+              <Link to="/login" className="link small">Back to login</Link>
+              <button className="btn primary" disabled={loading}>
+                {loading ? "Verifying..." : "Verify email"}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
-      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {toast && <Toast {...toast} onClose={() => setToast(null)} />}
     </div>
   );
 }

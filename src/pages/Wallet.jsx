@@ -22,22 +22,22 @@ export default function Wallet() {
 
   const [transactions, setTransactions] = useState([]);
   const [txLoading, setTxLoading] = useState(false);
-
   const [toast, setToast] = useState(null);
 
-  // central single-sheet control
+  // sheet control
   const [activeSheet, setActiveSheet] = useState(null);
-  // values: null | "deposit" | "withdraw" | "otp" | "savedAccounts"
-
   const [pendingDeposit, setPendingDeposit] = useState(null);
   const [pendingWithdraw, setPendingWithdraw] = useState(null);
 
+  // PIN modal
   const [showCreatePin, setShowCreatePin] = useState(false);
 
   const showToast = (message, type = "success") =>
     setToast({ message, type });
 
-  // ---- Load transactions ----
+  // ---------------------------
+  // Fetch wallet transactions
+  // ---------------------------
   const fetchTransactions = async () => {
     setTxLoading(true);
     try {
@@ -50,16 +50,15 @@ export default function Wallet() {
         setTransactions([]);
       }
     } catch (err) {
-      showToast(
-        err?.response?.data?.message || "Failed to load transactions",
-        "error"
-      );
+      showToast("Failed to load transactions", "error");
     } finally {
       setTxLoading(false);
     }
   };
 
-  // ---- Load pending deposit from backend ----
+  // ---------------------------
+  // Fetch pending deposit
+  // ---------------------------
   const fetchPendingDeposit = async () => {
     try {
       const res = await api.get("/wallet/deposit/pending");
@@ -68,24 +67,34 @@ export default function Wallet() {
       } else {
         setPendingDeposit(null);
       }
-    } catch (err) {
-      console.warn("Failed to load pending deposit", err);
-    }
+    } catch (_) {}
   };
 
-  // ---- Initial load: wallet + tx + PIN check + pending deposit ----
+  // ---------------------------
+  // INITIAL LOAD + PIN CHECK
+  // ---------------------------
   useEffect(() => {
     refreshWallet();
     fetchTransactions();
     fetchPendingDeposit();
 
-    // PIN modal logic
+    /**
+     * 🔐 CORRECT PIN LOGIC (FINAL)
+     *
+     * Rule:
+     * 1. If device already confirmed → never ask again
+     * 2. Else if backend says has_pin=true → confirm & never ask
+     * 3. Else → show create PIN
+     */
+
     let hasPinFromProfile = null;
+
     try {
       const rawUser =
         localStorage.getItem("trebettaUser") ||
         localStorage.getItem("trebetta_user") ||
         localStorage.getItem("user");
+
       if (rawUser) {
         const parsed = JSON.parse(rawUser);
         if (parsed && typeof parsed.has_pin === "boolean") {
@@ -96,162 +105,124 @@ export default function Wallet() {
 
     const localFlag = localStorage.getItem("trebetta_has_pin");
 
+    // already confirmed on this device
     if (localFlag === "yes") return;
+
+    // backend confirms PIN exists
     if (hasPinFromProfile === true) {
       localStorage.setItem("trebetta_has_pin", "yes");
       return;
     }
 
+    // first-time user
     setShowCreatePin(true);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleRefresh = () => {
-    refreshWallet();
-    fetchTransactions();
-    fetchPendingDeposit();
-  };
-
-  // ensure only one sheet is open at a time
-  const openOnly = (sheet) => {
-    setActiveSheet(sheet);
-  };
-
-  // callbacks used by sheets
-  const handleDepositCreated = (depositData) => {
+  // ---------------------------
+  // Sheet callbacks
+  // ---------------------------
+  const handleDepositCreated = (deposit) => {
     setActiveSheet(null);
-    setPendingDeposit(depositData);
-
-    try {
-      sessionStorage.setItem("trebetta_pending_deposit", JSON.stringify(depositData));
-    } catch (_) {}
-
-    // navigate to existing pending deposit page (keeps your current flow)
-    navigate("/wallet/deposit/pending", { state: { deposit: depositData } });
+    setPendingDeposit(deposit);
+    navigate("/wallet/deposit/pending", { state: { deposit } });
   };
 
-  const handleWithdrawInitiated = (withdrawData) => {
-    setPendingWithdraw(withdrawData);
-    // close withdraw sheet, open OTP sheet
+  const handleWithdrawInitiated = (withdraw) => {
+    setPendingWithdraw(withdraw);
     setActiveSheet("otp");
   };
 
   const handleWithdrawConfirmed = () => {
     setActiveSheet(null);
     setPendingWithdraw(null);
-    showToast("Withdrawal is now processing", "success");
     refreshWallet();
     fetchTransactions();
+    showToast("Withdrawal processing", "success");
   };
 
+  // ---------------------------
+  // PIN created
+  // ---------------------------
   const handlePinCreated = () => {
     localStorage.setItem("trebetta_has_pin", "yes");
     setShowCreatePin(false);
   };
 
-  const currentBalance = wallet?.balance || 0;
+  const balance = wallet?.balance || 0;
 
+  // ===========================
+  // RENDER
+  // ===========================
   return (
-    <div className="wallet-page container oxblood-theme">
+    <div className="wallet-page container">
       {/* HEADER */}
-      <div className="wallet-header">
-        <div className="wallet-header-left">
-          <h1 className="wallet-title">Wallet</h1>
-          <p className="wallet-subtitle small muted">
-             manage deposits, withdrawals and activity.
-          </p>
+      <header className="wallet-header">
+        <h1 className="wallet-title">Wallet</h1>
+        <button className="wallet-refresh" onClick={refreshWallet}>
+          Refresh
+        </button>
+      </header>
+
+      {/* PENDING DEPOSIT */}
+      {pendingDeposit && (
+        <PendingDepositBanner
+          deposit={pendingDeposit}
+          onViewDetails={() =>
+            navigate("/wallet/deposit/pending", {
+              state: { deposit: pendingDeposit },
+            })
+          }
+        />
+      )}
+
+      {/* BALANCE CARD */}
+      <section className="wallet-balance-card">
+        <div className="wallet-balance-label">Available balance</div>
+        <div className="wallet-balance-value">
+          ₦{Number(balance).toLocaleString("en-NG")}
         </div>
 
-        <div className="wallet-header-actions">
-          <button className="btn ghost wallet-refresh-btn" type="button" onClick={handleRefresh}>
-            ↻ Refresh
+        <div className="wallet-actions">
+          <button
+            className="btn primary"
+            onClick={() => setActiveSheet("deposit")}
+          >
+            Deposit
+          </button>
+
+          <button
+            className="btn ghost"
+            disabled={balance <= 0}
+            onClick={() => setActiveSheet("withdraw")}
+          >
+            Withdraw
+          </button>
+
+          <button
+            className="btn ghost"
+            onClick={() => setActiveSheet("saved")}
+          >
+            Saved accounts
           </button>
         </div>
-      </div>
+      </section>
 
-      {/* MAIN LAYOUT */}
-      <div className="wallet-grid">
-        {/* LEFT: Balance card + actions */}
-        <div className="wallet-left">
-          {/* PENDING DEPOSIT BANNER */}
-          {pendingDeposit && (
-            <PendingDepositBanner
-              deposit={pendingDeposit}
-              onViewDetails={() =>
-                navigate("/wallet/deposit/pending", { state: { deposit: pendingDeposit } })
-              }
-            />
-          )}
+      {/* ACTIVITY */}
+      <section className="wallet-activity">
+        <h2 className="wallet-section-title">Recent activity</h2>
 
-          <div className="oxblood-card">
-            <div className="card-top">
-              <div className="card-brand">TREBETTA</div>
-              <div className="card-currency">NGN</div>
-            </div>
+        {txLoading ? (
+          <Loader />
+        ) : transactions.length === 0 ? (
+          <p className="wallet-empty small muted">No transactions yet.</p>
+        ) : (
+          <TransactionList transactions={transactions} />
+        )}
+      </section>
 
-            <div className="card-balance">
-              <div className="balance-label">Available balance</div>
-              <div className="balance-value">
-                ₦{Number(currentBalance).toLocaleString("en-NG", { maximumFractionDigits: 0 })}
-              </div>
-            </div>
-
-            <div className="card-meta">
-              <div className="card-note">Secure — powered by Sterling</div>
-            </div>
-
-            <div className="card-actions action-buttons">
-              <button
-                className={`btn primary ${activeSheet === "deposit" ? "active-action" : ""}`}
-                onClick={() => openOnly(activeSheet === "deposit" ? null : "deposit")}
-              >
-                Deposit
-              </button>
-
-              <button
-                className={`btn outline ${activeSheet === "withdraw" ? "active-action" : ""}`}
-                onClick={() => openOnly(activeSheet === "withdraw" ? null : "withdraw")}
-                disabled={walletLoading || Number(currentBalance) <= 0}
-              >
-                Withdraw
-              </button>
-
-              <button
-                className={`btn ghost ${activeSheet === "saved" ? "active-action" : ""}`}
-                onClick={() => openOnly(activeSheet === "saved" ? null : "saved")}
-              >
-                Saved Accounts
-              </button>
-            </div>
-          </div>
-
-          {/* small pro tips */}
-          <div className="wallet-protips small muted">
-             Use Deposits to fund pools. Withdrawals require PIN + OTP 
-          </div>
-        </div>
-
-        {/* RIGHT: Activity / transactions */}
-        <div className="wallet-right">
-          <div className="wallet-activity-header">
-            <h2 className="wallet-activity-title">Recent activity</h2>
-          </div>
-
-          {txLoading ? (
-            <div className="wallet-tx-skeleton">
-              <Loader />
-            </div>
-          ) : transactions.length === 0 ? (
-            <div className="wallet-empty-state small muted">
-              No wallet transactions yet. Once you deposit, withdraw or get admin credits, they will show here.
-            </div>
-          ) : (
-            <TransactionList transactions={transactions} />
-          )}
-        </div>
-      </div>
-
-      {/* BOTTOM-SHEETS */}
+      {/* SHEETS */}
       <DepositSheet
         isOpen={activeSheet === "deposit"}
         onClose={() => setActiveSheet(null)}
@@ -268,8 +239,8 @@ export default function Wallet() {
 
       <OtpSheet
         isOpen={activeSheet === "otp"}
-        onClose={() => setActiveSheet(null)}
         withdrawData={pendingWithdraw}
+        onClose={() => setActiveSheet(null)}
         onConfirmed={handleWithdrawConfirmed}
         showToast={showToast}
       />
@@ -278,20 +249,31 @@ export default function Wallet() {
         isOpen={activeSheet === "saved"}
         onClose={() => setActiveSheet(null)}
         onSelectAccount={(acc) => {
-          // open withdraw sheet and preselect account via custom event (we'll use localStorage quick hack)
-          try {
-            localStorage.setItem("trebetta_selected_saved_account", JSON.stringify(acc));
-          } catch (_) {}
+          localStorage.setItem(
+            "trebetta_selected_saved_account",
+            JSON.stringify(acc)
+          );
           setActiveSheet("withdraw");
         }}
-        showToast={showToast}
       />
 
+      {/* CREATE PIN (FIRST TIME ONLY) */}
       {showCreatePin && (
-        <CreatePinModal onClose={() => setShowCreatePin(false)} onCreated={handlePinCreated} showToast={showToast} />
+        <CreatePinModal
+          onCreated={handlePinCreated}
+          onClose={() => setShowCreatePin(false)}
+          showToast={showToast}
+        />
       )}
 
-      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {/* TOAST */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

@@ -176,3 +176,12 @@
   justify-content: center;
   line-height: 1;
 }
+/* =====================
+   Brand contrast fix
+===================== */
+[data-theme="dark"] .brand {
+  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}

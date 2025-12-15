@@ -1,0 +1,35 @@
+.help-section {
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.help-section-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.help-toggle {
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.help-section-body {
+  padding: 0 12px 12px;
+}
+
+.help-item {
+  margin-top: 10px;
+}
+
+.help-q {
+  font-weight: 600;
+  margin-bottom: 2px;
+}

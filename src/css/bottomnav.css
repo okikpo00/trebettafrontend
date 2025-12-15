@@ -65,3 +65,47 @@
     display: block;
   }
 }
+
+/* ============================================
+   DARK MODE REFINEMENT — BottomNav
+   ============================================ */
+
+[data-theme="dark"] .bottom-nav {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* icons + text base */
+[data-theme="dark"] .nav-item {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* hover */
+[data-theme="dark"] .nav-item:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* active tab */
+[data-theme="dark"] .nav-item.active {
+  color: var(--accent);
+  font-weight: 700;
+  transform: scale(1.08);
+}
+
+/* subtle glow for active icon */
+[data-theme="dark"] .nav-item.active svg {
+  filter: drop-shadow(0 0 6px rgba(138, 28, 28, 0.45));
+}
+
+/* soften labels slightly */
+[data-theme="dark"] .nav-item span {
+  opacity: 0.9;
+}
+
+/* reduce visual noise */
+[data-theme="dark"] .bottom-inner {
+  gap: clamp(6px, 1vw, 14px);
+}

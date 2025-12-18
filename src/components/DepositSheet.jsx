@@ -3,63 +3,116 @@ import React, { useEffect, useState } from "react";
 import api from "../api";
 import BottomSheetPortal from "./BottomSheetPortal";
 
-const SUPPORT_PHONE = "+234 810 000 0000"; // replace with real support phone
+const SUPPORT_PHONE = "+234 810 000 0000";
+const FLW_MIN_AMOUNT = 500; // 🔴 Flutterwave minimum
 
 export default function DepositSheet({ isOpen, onClose, onCreated, showToast }) {
+  const [method, setMethod] = useState("flutterwave"); // flutterwave | manual
   const [amount, setAmount] = useState("");
   const [senderName, setSenderName] = useState("");
   const [senderBank, setSenderBank] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  // reset whenever sheet closes
+  // 🔴 INLINE SHEET ERROR (VISIBLE)
+  const [sheetError, setSheetError] = useState("");
+
+  /* ----------------------------------
+     RESET ON CLOSE
+  ----------------------------------- */
   useEffect(() => {
     if (!isOpen) {
+      setMethod("flutterwave");
       setAmount("");
       setSenderName("");
       setSenderBank("");
       setResult(null);
       setLoading(false);
+      setSheetError("");
     }
   }, [isOpen]);
 
+  /* ----------------------------------
+     SUBMIT HANDLER
+  ----------------------------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
 
-    const clean = Number(amount);
-    if (!clean || clean <= 0) {
-      showToast("Enter a valid deposit amount", "error");
+    setSheetError("");
+
+    const cleanAmount = Number(amount);
+
+    if (!cleanAmount || cleanAmount <= 0) {
+      setSheetError("Enter a valid amount e.g. 5000");
       return;
     }
+
+    /* -------------------------------
+       FLUTTERWAVE (INSTANT)
+    -------------------------------- */
+    if (method === "flutterwave") {
+      // 🔴 MINIMUM VALIDATION
+      if (cleanAmount < FLW_MIN_AMOUNT) {
+        setSheetError("Minimum instant deposit is ₦500");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const res = await api.post(
+          "/wallet/deposit/flutterwave/initiate",
+          { amount: cleanAmount }
+        );
+
+        if (res.data?.status && res.data.data?.payment_link) {
+          window.location.href = res.data.data.payment_link;
+          return;
+        }
+
+        setSheetError("Unable to start payment. Please try again.");
+      } catch (err) {
+        setSheetError(
+          err?.response?.data?.message || "Failed to start payment"
+        );
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    /* -------------------------------
+       MANUAL DEPOSIT (UNCHANGED)
+    -------------------------------- */
     if (!senderName || senderName.trim().length < 2) {
-      showToast("Enter sender account name", "error");
+      setSheetError("Enter sender account name exactly as in your bank app");
       return;
     }
+
     if (!senderBank || senderBank.trim().length < 2) {
-      showToast("Enter sender bank", "error");
+      setSheetError("Enter sender bank e.g. GTBank, Opay, Kuda");
       return;
     }
 
     setLoading(true);
     try {
       const res = await api.post("/wallet/deposit/initiate", {
-        amount: clean,
+        amount: cleanAmount,
         sender_name: senderName.trim(),
         sender_bank: senderBank.trim(),
       });
 
       if (res.data?.status && res.data.data) {
-        const data = res.data.data;
-        setResult(data);
+        setResult(res.data.data);
         showToast(res.data.message || "Deposit created", "success");
-        // call onCreated so current app flow works
-        onCreated(data);
+        onCreated?.(res.data.data);
       } else {
-        showToast(res.data?.message || "Could not create deposit", "error");
+        setSheetError(res.data?.message || "Could not create deposit");
       }
     } catch (err) {
-      showToast(err?.response?.data?.message || "Deposit initiation failed", "error");
+      setSheetError(
+        err?.response?.data?.message || "Deposit initiation failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -70,66 +123,173 @@ export default function DepositSheet({ isOpen, onClose, onCreated, showToast }) 
   return (
     <BottomSheetPortal>
       <div className="bottom-sheet-backdrop" onClick={onClose}>
-        <div className="bottom-sheet luxe" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="bottom-sheet luxe"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="bottom-sheet-handle" />
 
           {!result ? (
             <>
+              {/* HEADER */}
               <div className="bottom-sheet-header">
-                <h3 className="bottom-sheet-title">Create deposit</h3>
-                <p className="bottom-sheet-subtitle small">Transfer the exact amount to Trebetta's account. Keep the reference.</p>
+                <h3 className="bottom-sheet-title">Add money</h3>
+                <p className="bottom-sheet-subtitle small">
+                  Choose how you want to fund your wallet
+                </p>
               </div>
 
               <form onSubmit={handleSubmit} className="bottom-sheet-body">
+                {/* METHOD */}
+                <div className="form-group">
+                  <label>Deposit method</label>
+
+                  <div className="deposit-methods">
+                    <button
+                      type="button"
+                      className={`deposit-method ${
+                        method === "flutterwave" ? "active" : ""
+                      }`}
+                      onClick={() => setMethod("flutterwave")}
+                    >
+                      <strong>Instant deposit</strong>
+                      <span className="tiny muted">
+                        Card / Bank transfer / USSD (IMPORTANT:
+During payment, your bank may show the beneficiary as
+HORIZON BLUE BLISS GLOBAL.
+This is Trebetta’s official payment account. Your wallet will be credited automatically.)
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`deposit-method ${
+                        method === "manual" ? "active" : ""
+                      }`}
+                      onClick={() => setMethod("manual")}
+                    >
+                      <strong>Manual bank transfer</strong>
+                      <span className="tiny muted">
+                        Processed manually • takes a few minutes
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* AMOUNT */}
                 <div className="form-group">
                   <label>Amount (₦)</label>
-                  <input type="number" inputMode="numeric" min="0" className="input" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 5000" required />
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    className="input"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="e.g. 5000"
+                  />
                 </div>
 
-                <div className="form-group">
-                  <label>Sender account name</label>
-                  <input type="text" className="input" value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="Exact name on your bank app" required />
-                </div>
+                {/* MANUAL FIELDS */}
+                {method === "manual" && (
+                  <>
+                    <div className="form-group">
+                      <label>Sender account name</label>
+                      <input
+                        className="input"
+                        value={senderName}
+                        onChange={(e) => setSenderName(e.target.value)}
+                        placeholder="Exact name on your bank app"
+                      />
+                    </div>
 
-                <div className="form-group">
-                  <label>Sender bank</label>
-                  <input type="text" className="input" value={senderBank} onChange={(e) => setSenderBank(e.target.value)} placeholder="e.g. GTBank, Access, Kuda..." required />
-                </div>
+                    <div className="form-group">
+                      <label>Sender bank</label>
+                      <input
+                        className="input"
+                        value={senderBank}
+                        onChange={(e) => setSenderBank(e.target.value)}
+                        placeholder="e.g. GTBank, Opay, Kuda"
+                      />
+                    </div>
+                  </>
+                )}
 
+                {/* 🔴 INLINE ERROR */}
+                {sheetError && (
+                  <div className="sheet-error">
+                    {sheetError}
+                  </div>
+                )}
+
+                {/* FOOTER */}
                 <div className="bottom-sheet-footer">
-                  <button type="button" className="btn ghost" onClick={onClose} disabled={loading}>Cancel</button>
-                  <button type="submit" className="btn primary" disabled={loading}>{loading ? "Creating..." : "Create deposit"}</button>
+                  <button
+                    type="button"
+                    className="btn ghost"
+                    onClick={onClose}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="btn primary"
+                    disabled={loading}
+                  >
+                    {loading
+                      ? "Please wait..."
+                      : method === "flutterwave"
+                      ? "Continue to payment"
+                      : "Create deposit"}
+                  </button>
                 </div>
 
-                <p className="bottom-sheet-hint tiny">After creation you'll get Trebetta bank details below. You have 15 minutes to complete the transfer.</p>
+                {method === "manual" && (
+                  <p className="bottom-sheet-hint tiny">
+                    After creation, you’ll see Trebetta’s bank details.  
+                    You have 15 minutes to complete the transfer.
+                  </p>
+                )}
               </form>
             </>
           ) : (
+            /* RESULT VIEW */
             <div className="bottom-sheet-body">
               <div className="success-block">
                 <div className="success-title">Deposit created</div>
-                <div className="success-note tiny">Send the exact amount and reference to the account below</div>
+                <div className="success-note tiny">
+                  Send the exact amount using the details below
+                </div>
 
                 <div className="bank-details">
-                  <div className="bank-row"><div className="bank-label">Bank</div><div className="bank-value">{result.bank.bank_name}</div></div>
-                  <div className="bank-row"><div className="bank-label">Account number</div><div className="bank-value">{result.bank.account_number}</div></div>
-                  <div className="bank-row"><div className="bank-label">Account name</div><div className="bank-value">{result.bank.account_name}</div></div>
-                  <div className="bank-row"><div className="bank-label">Reference</div><div className="bank-value">{result.reference}</div></div>
+                  <div className="bank-row">
+                    <div className="bank-label">Bank</div>
+                    <div className="bank-value">{result.bank.bank_name}</div>
+                  </div>
+                  <div className="bank-row">
+                    <div className="bank-label">Account number</div>
+                    <div className="bank-value">{result.bank.account_number}</div>
+                  </div>
+                  <div className="bank-row">
+                    <div className="bank-label">Account name</div>
+                    <div className="bank-value">{result.bank.account_name}</div>
+                  </div>
+                  <div className="bank-row">
+                    <div className="bank-label">Reference</div>
+                    <div className="bank-value">{result.reference}</div>
+                  </div>
                 </div>
 
                 <div className="bottom-sheet-footer">
-                  <button type="button" className="btn ghost" onClick={onClose}>Done</button>
-                  <button type="button" className="btn primary" onClick={() => {
-                    try {
-                      navigator.clipboard.writeText(result.bank.account_number || "");
-                      showToast("Account number copied", "success");
-                    } catch (_) {
-                      showToast("Copy failed", "error");
-                    }
-                  }}>Copy account</button>
+                  <button className="btn ghost" onClick={onClose}>
+                    Done
+                  </button>
                 </div>
 
-                <div className="support tiny muted">Support: {SUPPORT_PHONE}</div>
+                <div className="support tiny muted">
+                  Support: {SUPPORT_PHONE}
+                </div>
               </div>
             </div>
           )}

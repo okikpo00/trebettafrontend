@@ -1,37 +1,88 @@
 /* ============================================
-   Trebetta Clean Join Pool Modal
-   Matches your screenshot exactly
+   TREBETTA — FLOATING JOIN POOL MODAL (FINAL)
+   No dependency on Modal.jsx
    ============================================ */
 
+/* ---------- FORCE FLOATING MODAL ---------- */
 .jp-wrap {
-  padding: 1.2rem;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+  animation: jp-backdrop-fade 0.25s ease-out;
 }
 
+/* ---------- BACKDROP ---------- */
+.jp-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- MODAL CARD ---------- */
+.jp-form,
+.jp-center {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 520px;
+
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1.4rem;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255,255,255,0.04);
+
+  animation: jp-modal-pop 0.32s cubic-bezier(.16,.84,.44,1);
+}
+
+/* ---------- DARK MODE CARD ---------- */
+[data-theme="dark"] .jp-form,
+[data-theme="dark"] .jp-center {
+  background: #0d0d0d;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255,255,255,0.06);
+}
+
+/* ---------- LOADER CENTER ---------- */
 .jp-center {
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 2rem 0;
+  min-height: 220px;
 }
 
+/* ---------- DESCRIPTION ---------- */
 .jp-desc {
   margin-bottom: 1rem;
+  font-size: 0.95rem;
   color: var(--muted);
-  font-size: var(--font-sm);
 }
 
-/* Sections */
+/* ---------- SECTIONS ---------- */
 .jp-section {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.25rem;
 }
 
 .jp-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
   color: var(--text);
 }
 
-/* Option pills */
+/* ---------- OPTION PILLS ---------- */
 .jp-options {
   display: flex;
   flex-wrap: wrap;
@@ -39,59 +90,100 @@
 }
 
 .jp-pill {
-  padding: 0.5rem 1rem;
-  border-radius: 50px;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
   background: var(--glass);
-  border: 1px solid rgba(0,0,0,0.1);
-  font-size: var(--font-sm);
+  border: 1px solid rgba(0,0,0,0.12);
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.18s ease;
+}
+
+.jp-pill:hover {
+  transform: translateY(-1px);
 }
 
 [data-theme="dark"] .jp-pill {
-  border-color: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.12);
 }
 
 .jp-pill.active {
   background: var(--accent);
   color: #fff;
   border-color: var(--accent);
+  /* ---------- DARK MODE OPTION TEXT FIX ---------- */
+}
+/* ---------- DARK MODE OPTION TEXT FIX ---------- */
+[data-theme="dark"] .jp-pill {
+  color: #f5f5f5;
 }
 
-/* Entry box */
+/* ---------- ENTRY ---------- */
 .jp-entry-box {
-  padding: 0.8rem;
-  border-radius: var(--radius-md);
+  padding: 0.9rem;
+  border-radius: 12px;
   background: var(--glass);
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.12);
 }
 
 [data-theme="dark"] .jp-entry-box {
-  border-color: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.12);
 }
 
 .jp-entry-amount {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.35rem;
+  font-weight: 800;
   color: var(--text);
 }
 
 .jp-min {
   margin-top: 0.3rem;
-  font-size: var(--font-xs);
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
-/* Errors */
+/* ---------- ERRORS ---------- */
 .jp-error {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
   color: var(--danger);
-  margin-top: 0.3rem;
-  font-size: var(--font-xs);
 }
 
-/* Actions */
+/* ---------- ACTIONS ---------- */
 .jp-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.8rem;
-  margin-top: 1.2rem;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes jp-modal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes jp-backdrop-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 480px) {
+  .jp-form,
+  .jp-center {
+    padding: 1.1rem;
+    border-radius: 14px;
+  }
 }

@@ -1,24 +1,23 @@
 // src/components/PoolOptionCard.jsx
 import React from "react";
-import { ChevronRight } from "lucide-react";
 
 export default function PoolOptionCard({
   option,
-  poolStatus,      // <-- we need this
+  poolStatus,
   isUserPick,
   onSelect,
 }) {
   const status = (option.status || "").toLowerCase();
 
-  const isSettled = poolStatus === "settled" || poolStatus === "closed" || poolStatus === "rollover";
+  const isSettled =
+    poolStatus === "settled" ||
+    poolStatus === "closed" ||
+    poolStatus === "rollover";
 
-  // Backend rule:
-  // active     → winner (ONLY if settled)
-  // eliminated → eliminated
+  // Backend rule
   const isWinner = isSettled && status === "active";
   const isEliminated = status === "eliminated";
 
-  // Badge label + class
   let statusLabel = "";
   let statusClass = "";
 
@@ -26,55 +25,41 @@ export default function PoolOptionCard({
     statusLabel = "Winner";
     statusClass = "status-won";
   } else if (isEliminated) {
+    statusLabel = "status-eliminated";
     statusLabel = "Eliminated";
-    statusClass = "status-eliminated";
   }
-
-  const stake = Number(option.total_stake || 0);
 
   return (
     <button
       type="button"
       className={
-        "pool-option-card" +
+        "pool-option-card option-static" +
         (isWinner ? " winner" : "") +
         (isEliminated ? " eliminated" : "") +
         (isUserPick ? " selected" : "")
       }
       onClick={onSelect}
     >
+      {/* TITLE */}
       <div className="pool-option-header">
-        <div className="pool-option-title">{option.title}</div>
-
-        {/* Right arrow icon */}
-        <div className="pool-option-chip">
-          <ChevronRight size={14} />
+        <div className="pool-option-title">
+          {option.title}
         </div>
       </div>
 
+      {/* STATUS ONLY */}
       <div className="pool-option-footer">
-        <span>
-          Stake: ₦
-          {stake.toLocaleString("en-NG", {
-            maximumFractionDigits: 0,
-          })}
-        </span>
+        {isUserPick && !isWinner && (
+          <span className="pool-option-chip your-pick">
+            Your pick
+          </span>
+        )}
 
-        <span>
-          {/* Your Pick */}
-          {isUserPick && !isWinner && (
-            <span className="pool-option-chip your-pick">
-              Your pick
-            </span>
-          )}
-
-          {/* Winner or Eliminated */}
-          {!isUserPick && statusLabel && (
-            <span className={"pool-option-chip " + statusClass}>
-              {statusLabel}
-            </span>
-          )}
-        </span>
+        {!isUserPick && statusLabel && (
+          <span className={"pool-option-chip " + statusClass}>
+            {statusLabel}
+          </span>
+        )}
       </div>
     </button>
   );

@@ -432,3 +432,13 @@
 [data-theme="dark"] .pool-option-title {
   color: var(--text) !important;
 }
+
+/* Pool option should not look like a link */
+.pool-option-card.option-static {
+  cursor: default;
+}
+
+.pool-option-card.option-static:hover {
+  transform: none;
+  box-shadow: none;
+}

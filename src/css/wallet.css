@@ -127,3 +127,198 @@
     font-weight: 600;
   }
 }
+/* ==============================
+   Deposit Method Selector
+   Theme-safe (Light & Dark)
+   ============================== */
+
+.deposit-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Card */
+.deposit-method {
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border, rgba(0,0,0,0.08));
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Title */
+.deposit-method strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Subtitle */
+.deposit-method span {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* Hover */
+.deposit-method:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+/* Active */
+.deposit-method.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--card));
+}
+
+.deposit-method.active strong {
+  color: var(--accent);
+}
+
+/* Press */
+.deposit-method:active {
+  transform: scale(0.98);
+}
+/* ===============================
+   LIGHT MODE SHEET FIX — TREBETTA
+   =============================== */
+
+[data-theme="light"] .bottom-sheet.luxe {
+  background: #ffffff;
+  color: #111;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Header */
+[data-theme="light"] .bottom-sheet-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .bottom-sheet-title {
+  color: #111;
+}
+
+[data-theme="light"] .bottom-sheet-subtitle {
+  color: #2c2a2a;
+}
+
+/* Inputs */
+[data-theme="light"] .bottom-sheet .input,
+[data-theme="light"] .bottom-sheet select {
+  background: #fff;
+  color: #111111;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .bottom-sheet .input::placeholder {
+  color: #867676;
+}
+
+/* Labels */
+[data-theme="light"] .bottom-sheet label {
+  color: #222;
+  font-weight: 600;
+}
+
+/* Fee preview */
+[data-theme="light"] .wallet-fee-preview {
+  color: #333;
+}
+
+/* Checkbox row */
+[data-theme="light"] .checkbox-row span {
+  color: #333;
+}
+
+/* Saved account cards */
+[data-theme="light"] .saved-account-row {
+  background: #a19393;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Bottom actions */
+[data-theme="light"] .bottom-sheet-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Hint text */
+[data-theme="light"] .bottom-sheet-hint {
+  color: #0c0b0b;
+}
+
+/* Handle */
+[data-theme="light"] .bottom-sheet-handle {
+  background: rgba(211, 127, 127, 0.25);
+}
+/* ===============================
+   FIX SHEET WARNING VISIBILITY
+   =============================== */
+
+/* General warning text inside sheets */
+.bottom-sheet .tiny {
+  position: relative;
+  z-index: 3;
+  opacity: 1;
+}
+
+/* Minimum withdrawal warning */
+.bottom-sheet .tiny[style*="--danger"] {
+  font-weight: 600;
+}
+
+/* LIGHT MODE FIX */
+[data-theme="light"] .bottom-sheet .tiny {
+  color: #0f1cda !important; /* deep red */
+}
+
+/* DARK MODE FIX */
+[data-theme="dark"] .bottom-sheet .tiny {
+  color: #e9eee9 !important;
+}
+
+
+
+
+
+.sheet-error {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #b42318;
+  background: rgba(180, 35, 24, 0.08);
+  border: 1px solid rgba(180, 35, 24, 0.25);
+}
+
+/* Dark mode */
+[data-theme="dark"] .sheet-error {
+  color: #ffb4a8;
+  background: rgba(255, 80, 80, 0.12);
+  border-color: rgba(255, 80, 80, 0.35);
+}
+/* OTP input styling */
+.otp-input {
+  text-align: center;
+  font-size: 1.4rem;
+  letter-spacing: 0.4rem;
+  font-weight: 600;
+}
+
+/* Inline sheet error */
+.sheet-error {
+  margin: 10px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+  font-size: 0.85rem;
+}

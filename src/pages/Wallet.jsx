@@ -1,5 +1,5 @@
 // src/pages/Wallet.jsx
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 import "../css/wallet.css";
@@ -24,68 +24,55 @@ export default function Wallet() {
   const [txLoading, setTxLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // sheet control
   const [activeSheet, setActiveSheet] = useState(null);
   const [pendingDeposit, setPendingDeposit] = useState(null);
   const [pendingWithdraw, setPendingWithdraw] = useState(null);
 
-  // PIN modal
   const [showCreatePin, setShowCreatePin] = useState(false);
+
+  // 🔁 polling refs (VERY IMPORTANT to avoid leaks)
+  const pollRef = useRef(null);
+  const lastBalanceRef = useRef(null);
 
   const showToast = (message, type = "success") =>
     setToast({ message, type });
 
-  // ---------------------------
-  // Fetch wallet transactions
-  // ---------------------------
+  /* ----------------------------------
+     FETCH TRANSACTIONS
+  ---------------------------------- */
   const fetchTransactions = async () => {
     setTxLoading(true);
     try {
       const res = await api.get("/wallet/transactions", {
         params: { page: 1, limit: 10 },
       });
-      if (res.data?.status && Array.isArray(res.data.data)) {
-        setTransactions(res.data.data);
-      } else {
-        setTransactions([]);
-      }
-    } catch (err) {
+      setTransactions(res.data?.status ? res.data.data : []);
+    } catch {
       showToast("Failed to load transactions", "error");
     } finally {
       setTxLoading(false);
     }
   };
 
-  // ---------------------------
-  // Fetch pending deposit
-  // ---------------------------
+  /* ----------------------------------
+     FETCH PENDING DEPOSIT
+  ---------------------------------- */
   const fetchPendingDeposit = async () => {
     try {
       const res = await api.get("/wallet/deposit/pending");
-      if (res.data?.status && res.data.data) {
-        setPendingDeposit(res.data.data);
-      } else {
-        setPendingDeposit(null);
-      }
-    } catch (_) {}
+      setPendingDeposit(res.data?.status ? res.data.data : null);
+    } catch {
+      setPendingDeposit(null);
+    }
   };
 
-  // ---------------------------
-  // INITIAL LOAD + PIN CHECK
-  // ---------------------------
+  /* ----------------------------------
+     INITIAL LOAD + PIN CHECK
+  ---------------------------------- */
   useEffect(() => {
     refreshWallet();
     fetchTransactions();
     fetchPendingDeposit();
-
-    /**
-     * 🔐 CORRECT PIN LOGIC (FINAL)
-     *
-     * Rule:
-     * 1. If device already confirmed → never ask again
-     * 2. Else if backend says has_pin=true → confirm & never ask
-     * 3. Else → show create PIN
-     */
 
     let hasPinFromProfile = null;
 
@@ -97,36 +84,71 @@ export default function Wallet() {
 
       if (rawUser) {
         const parsed = JSON.parse(rawUser);
-        if (parsed && typeof parsed.has_pin === "boolean") {
-          hasPinFromProfile = parsed.has_pin;
-        }
+        hasPinFromProfile = parsed?.has_pin;
       }
-    } catch (_) {}
+    } catch {}
 
     const localFlag = localStorage.getItem("trebetta_has_pin");
 
-    // already confirmed on this device
     if (localFlag === "yes") return;
 
-    // backend confirms PIN exists
     if (hasPinFromProfile === true) {
       localStorage.setItem("trebetta_has_pin", "yes");
       return;
     }
 
-    // first-time user
     setShowCreatePin(true);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ---------------------------
-  // Sheet callbacks
-  // ---------------------------
+  /* ----------------------------------
+     🔁 AUTO WALLET POLLING (NEW)
+     Triggers when deposit is pending
+  ---------------------------------- */
+  useEffect(() => {
+    if (!pendingDeposit) {
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+      return;
+    }
+
+    // store balance before polling
+    lastBalanceRef.current = wallet?.balance ?? 0;
+
+    pollRef.current = setInterval(async () => {
+      await refreshWallet();
+      await fetchPendingDeposit();
+      await fetchTransactions();
+
+      const newBalance = wallet?.balance ?? 0;
+
+      // ✅ STOP polling when balance increases
+      if (newBalance > lastBalanceRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        setPendingDeposit(null);
+        showToast("Wallet updated", "success");
+      }
+    }, 4000);
+
+    return () => {
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingDeposit]);
+
+  /* ----------------------------------
+     SHEET CALLBACKS
+  ---------------------------------- */
   const handleDepositCreated = (deposit) => {
     setActiveSheet(null);
     setPendingDeposit(deposit);
-    navigate("/wallet/deposit/pending", { state: { deposit } });
+    fetchPendingDeposit();
   };
 
   const handleWithdrawInitiated = (withdraw) => {
@@ -142,9 +164,9 @@ export default function Wallet() {
     showToast("Withdrawal processing", "success");
   };
 
-  // ---------------------------
-  // PIN created
-  // ---------------------------
+  /* ----------------------------------
+     PIN CREATED
+  ---------------------------------- */
   const handlePinCreated = () => {
     localStorage.setItem("trebetta_has_pin", "yes");
     setShowCreatePin(false);
@@ -152,12 +174,11 @@ export default function Wallet() {
 
   const balance = wallet?.balance || 0;
 
-  // ===========================
-  // RENDER
-  // ===========================
+  /* ----------------------------------
+     RENDER
+  ---------------------------------- */
   return (
     <div className="wallet-page container">
-      {/* HEADER */}
       <header className="wallet-header">
         <h1 className="wallet-title">Wallet</h1>
         <button className="wallet-refresh" onClick={refreshWallet}>
@@ -165,7 +186,6 @@ export default function Wallet() {
         </button>
       </header>
 
-      {/* PENDING DEPOSIT */}
       {pendingDeposit && (
         <PendingDepositBanner
           deposit={pendingDeposit}
@@ -177,7 +197,6 @@ export default function Wallet() {
         />
       )}
 
-      {/* BALANCE CARD */}
       <section className="wallet-balance-card">
         <div className="wallet-balance-label">Available balance</div>
         <div className="wallet-balance-value">
@@ -185,31 +204,20 @@ export default function Wallet() {
         </div>
 
         <div className="wallet-actions">
-          <button
-            className="btn primary"
-            onClick={() => setActiveSheet("deposit")}
-          >
+          <button className="btn primary" onClick={() => setActiveSheet("deposit")}>
             Deposit
           </button>
-
           <button
             className="btn ghost"
             disabled={balance <= 0}
             onClick={() => setActiveSheet("withdraw")}
           >
             Withdraw
-          </button>
-
-          <button
-            className="btn ghost"
-            onClick={() => setActiveSheet("saved")}
-          >
-            Saved accounts
+    
           </button>
         </div>
       </section>
 
-      {/* ACTIVITY */}
       <section className="wallet-activity">
         <h2 className="wallet-section-title">Recent activity</h2>
 
@@ -222,7 +230,6 @@ export default function Wallet() {
         )}
       </section>
 
-      {/* SHEETS */}
       <DepositSheet
         isOpen={activeSheet === "deposit"}
         onClose={() => setActiveSheet(null)}
@@ -257,7 +264,6 @@ export default function Wallet() {
         }}
       />
 
-      {/* CREATE PIN (FIRST TIME ONLY) */}
       {showCreatePin && (
         <CreatePinModal
           onCreated={handlePinCreated}
@@ -266,7 +272,6 @@ export default function Wallet() {
         />
       )}
 
-      {/* TOAST */}
       {toast && (
         <Toast
           message={toast.message}

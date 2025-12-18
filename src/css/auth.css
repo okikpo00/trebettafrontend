@@ -104,3 +104,58 @@ label{font-weight:700;font-size:0.9rem;color:var(--text)}
   from { opacity: 0; transform: translateY(6px) }
   to { opacity: 1; transform: translateY(0) }
 }
+
+/* ============================================
+   AUTH — DARK MODE TEXT FIX
+   Make oxblood text white for readability
+   ============================================ */
+
+[data-theme="dark"] {
+  /* main readable text */
+  --auth-text: #ffffff;
+  --auth-muted: #cbd5e1; /* soft light grey */
+}
+
+/* TITLES */
+[data-theme="dark"] .auth-hero .brand-title {
+  color: #ffffff;
+}
+
+/* SUBTITLES */
+[data-theme="dark"] .auth-hero .subtitle {
+  color: var(--auth-muted);
+}
+
+/* FORM LABELS */
+[data-theme="dark"] .field label {
+  color: #ffffff;
+}
+
+/* INPUT TEXT */
+[data-theme="dark"] .input {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* LINKS — white by default, oxblood on hover */
+[data-theme="dark"] .link {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .link:hover {
+  color: var(--accent); /* oxblood */
+}
+
+/* GHOST BUTTON TEXT */
+[data-theme="dark"] .btn.ghost {
+  color: #ffffff;
+}
+
+/* HELPER TEXT */
+[data-theme="dark"] .field-msg.helper,
+[data-theme="dark"] .small {
+  color: var(--auth-muted);
+}

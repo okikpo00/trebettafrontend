@@ -1,3 +1,4 @@
+// src/components/WithdrawSheet.jsx
 import React, { useEffect, useRef, useState } from "react";
 import api from "../api";
 import BottomSheetPortal from "./BottomSheetPortal";
@@ -24,17 +25,19 @@ export default function WithdrawSheet({
   const [feeRules, setFeeRules] = useState([]);
   const [feePreview, setFeePreview] = useState(0);
 
+  // 🔴 LOCAL ERROR (THIS IS THE FIX)
+  const [localError, setLocalError] = useState("");
+
   const amountRef = useRef(null);
 
-  // Trebetta profile name
   const displayName =
     profile?.full_name ||
     `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() ||
     "";
 
-  // Load fee rules
   useEffect(() => {
     if (!isOpen) return;
+    setLocalError("");
 
     const load = async () => {
       try {
@@ -45,7 +48,6 @@ export default function WithdrawSheet({
     load();
   }, [isOpen]);
 
-  // calculate fee
   useEffect(() => {
     const amt = Number(amount);
     if (!amt || amt < MIN_WITHDRAW) {
@@ -65,14 +67,8 @@ export default function WithdrawSheet({
     setFeePreview(fee);
   }, [amount, feeRules]);
 
-  // resolve bank account
   useEffect(() => {
-    if (!accountNumber || !bankId) {
-      setAccountResolved(false);
-      return;
-    }
-
-    if (accountNumber.length !== 10) {
+    if (!accountNumber || !bankId || accountNumber.length !== 10) {
       setAccountResolved(false);
       return;
     }
@@ -91,27 +87,17 @@ export default function WithdrawSheet({
           setAccountName(res.data.data.account_name);
           setAccountResolved(true);
         } else {
+          setLocalError("Could not resolve account name. Enter manually.");
           setAccountResolved(false);
-          showToast("Could not resolve account name — enter manually", "error");
         }
-      } catch (_) {
+      } catch {
+        setLocalError("Account resolve service unavailable.");
         setAccountResolved(false);
-        showToast(
-          "Account resolve service unavailable — enter name manually",
-          "error"
-        );
       }
     }, 600);
 
     return () => clearTimeout(handler);
   }, [accountNumber, bankId]);
-
-  const triggerShake = () => {
-    if (!amountRef.current) return;
-    amountRef.current.classList.remove("shake");
-    amountRef.current.offsetWidth;
-    amountRef.current.classList.add("shake");
-  };
 
   const reset = () => {
     setAmount("");
@@ -122,6 +108,7 @@ export default function WithdrawSheet({
     setPin("");
     setSaveAccount(true);
     setFeePreview(0);
+    setLocalError("");
   };
 
   const handleSubmit = async (e) => {
@@ -131,34 +118,27 @@ export default function WithdrawSheet({
     const cleanAmt = Number(amount);
 
     if (cleanAmt < MIN_WITHDRAW) {
-      triggerShake();
-      showToast(`Minimum withdrawal is ₦${MIN_WITHDRAW}`, "error");
+      setLocalError(`Minimum withdrawal is ₦${MIN_WITHDRAW}`);
       return;
     }
 
-    // 10-digit validation
     if (String(accountNumber).length !== 10) {
-      showToast("Account number must be exactly 10 digits", "error");
+      setLocalError("Account number must be exactly 10 digits");
       return;
     }
 
-    // Name mismatch validation
-    if (
-      accountName.trim().toLowerCase() !== displayName.trim().toLowerCase()
-    ) {
-      showToast(
-        "Withdrawal rejected — bank account name does not match your Trebetta name.",
-        "error"
-      );
-      return;
-    }
+    <p className="tiny muted">
+  Ensure this bank account belongs to you. Withdrawals to third-party accounts may be rejected.
+</p>
+
 
     if (!bankId || !accountName || !pin || pin.length < 4) {
-      showToast("Please fill all required fields correctly", "error");
+      setLocalError("Please fill all required fields correctly");
       return;
     }
 
     setLoading(true);
+    setLocalError("");
 
     try {
       const bankObj = BANKS.find((b) => b.id === bankId);
@@ -178,12 +158,11 @@ export default function WithdrawSheet({
         onInitiated(res.data.data);
         reset();
       } else {
-        showToast(res.data?.message || "Withdrawal failed", "error");
+        setLocalError(res.data?.message || "Withdrawal failed");
       }
     } catch (err) {
-      showToast(
-        err?.response?.data?.message || "Withdrawal initiation failed",
-        "error"
+      setLocalError(
+        err?.response?.data?.message || "Withdrawal initiation failed"
       );
     } finally {
       setLoading(false);
@@ -204,11 +183,19 @@ export default function WithdrawSheet({
           <div className="bottom-sheet-header">
             <h3 className="bottom-sheet-title">Withdraw</h3>
             <p className="bottom-sheet-subtitle small">
-              Withdraw to your bank. Confirm with OTP sent to your email.
+              Withdraw to your bank. Confirm with OTP sent to your email. NOTE make sure your bank name matches your Trebetta profile name to avoid rejection.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="bottom-sheet-body">
+
+            {/* 🔴 LOCAL ERROR BANNER */}
+            {localError && (
+              <div className="sheet-error">
+                {localError}
+              </div>
+            )}
+
             {/* AMOUNT */}
             <div className="form-group">
               <label>Amount (₦)</label>
@@ -222,19 +209,14 @@ export default function WithdrawSheet({
               />
             </div>
 
-            {/* FEES */}
-            {amt >= MIN_WITHDRAW ? (
+            {amt >= MIN_WITHDRAW && (
               <div className="tiny wallet-fee-preview">
-                Fee: <strong>₦{feePreview}</strong> • You will receive:{" "}
+                Fee: <strong>₦{feePreview}</strong> • You receive:{" "}
                 <strong>₦{payout}</strong>
-              </div>
-            ) : (
-              <div className="tiny" style={{ color: "var(--danger)" }}>
-                Minimum withdrawal is ₦{MIN_WITHDRAW}
               </div>
             )}
 
-            {/* BANK SELECT */}
+            {/* BANK */}
             <div className="form-group">
               <label>Bank</label>
               <select
@@ -247,9 +229,7 @@ export default function WithdrawSheet({
               >
                 <option value="">Choose bank</option>
                 {BANKS.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
-                  </option>
+                  <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>
             </div>
@@ -269,9 +249,6 @@ export default function WithdrawSheet({
                 }}
                 placeholder="10-digit account number"
               />
-              <div className="tiny" style={{ opacity: 0.75, marginTop: 3 }}>
-                Ensure this is your correct account number to avoid failed withdrawals.
-              </div>
             </div>
 
             {/* ACCOUNT NAME */}
@@ -281,58 +258,40 @@ export default function WithdrawSheet({
                 className="input"
                 value={accountName}
                 onChange={(e) => setAccountName(e.target.value)}
-                placeholder={
-                  accountResolved ? "Resolved name" : "Enter account name"
-                }
                 readOnly={accountResolved}
+                placeholder="Account name"
               />
             </div>
 
             {/* PIN */}
             <div className="form-group">
               <label>Transaction PIN</label>
-              <input
-                className="input"
-                type="password"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                placeholder="4-digit PIN"
-              />
+          <input
+  className="input"
+  type="password"
+  inputMode="numeric"
+  maxLength={4}
+  value={pin}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (/^\d*$/.test(v) && v.length <= 4) {
+      setPin(v);
+    }
+  }}
+  placeholder="4-digit PIN"
+/>
+
             </div>
 
-            {/* SAVE ACCOUNT */}
-            <label className="checkbox-row tiny">
-              <input
-                type="checkbox"
-                checked={saveAccount}
-                onChange={(e) => setSaveAccount(e.target.checked)}
-              />
-              <span>Save this bank account</span>
-            </label>
 
-            {/* FOOTER */}
             <div className="bottom-sheet-footer">
-              <button
-                type="button"
-                className="btn ghost"
-                onClick={() => { reset(); onClose(); }}
-                disabled={loading}
-              >
+              <button type="button" className="btn ghost" onClick={() => { reset(); onClose(); }}>
                 Cancel
               </button>
-
-              <button
-                type="submit"
-                className="btn primary"
-                disabled={loading || amt < MIN_WITHDRAW}
-              >
+              <button type="submit" className="btn primary" disabled={loading}>
                 {loading ? "Sending OTP..." : "Request withdrawal"}
               </button>
             </div>
-
-            <p className="bottom-sheet-hint tiny">
-              If account name wasn’t resolved, double-check before confirming.
-            </p>
           </form>
         </div>
       </div>

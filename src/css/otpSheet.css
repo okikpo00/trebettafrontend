@@ -1,0 +1,51 @@
+/* -------------------------------
+   OTP SHEET – PREMIUM UI
+-------------------------------- */
+
+.otp-box {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 0 18px;
+}
+
+.otp-box span {
+  flex: 1;
+  height: 54px;
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .otp-box span {
+    border-color: var(--border-dark);
+  }
+}
+
+.otp-box input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border: none;
+}
+/* -------------------------------
+   FIX: Ghost button visibility (Dark Mode)
+-------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+  .btn.ghost {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #2f344a;
+    color: #e5e7eb;
+  }
+
+  .btn.ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}

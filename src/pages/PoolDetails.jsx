@@ -281,15 +281,7 @@ const showJoinStrip =
                     })}
                   </div>
                 </div>
-                <div>
-                  <div className="pool-metric-label">Total stake</div>
-                  <div className="pool-metric-value">
-                    ₦
-                    {Number(pool.total_stake || 0).toLocaleString("en-NG", {
-                      maximumFractionDigits: 0,
-                    })}
-                  </div>
-                </div>
+           
                 <div
                   style={{ display: "flex", alignItems: "center", gap: 6 }}
                 >

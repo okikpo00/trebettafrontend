@@ -139,3 +139,25 @@
 .profile-logout-btn:hover {
   opacity: 0.9;
 }
+
+.pin-card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 14px;
+}
+
+.otp-input,
+.pin-input {
+  font-size: 1.6rem;
+  text-align: center;
+  letter-spacing: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.sheet-error {
+  background: rgba(220,38,38,0.1);
+  color: var(--danger);
+  padding: 0.7rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}

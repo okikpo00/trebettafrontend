@@ -21,6 +21,10 @@ import PoolDetails from "./pages/PoolDetails";
 import PoolLedger from "./pages/PoolLedger";
 import SlipViewer from "./pages/SlipViewer";
 
+import RequestPinReset from "./pages/RequestPinReset";
+import ConfirmPinReset from "./pages/ConfirmPinReset";
+import ChangePin from "./pages/ChangePin";
+
 // Auth pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -152,6 +156,11 @@ const App = () => {
   path="/support/terms"
   element={<TermsPrivacy />}
 />
+
+<Route path="/profile/pin/change" element={<ChangePin />} />
+<Route path="/profile/pin/reset" element={<RequestPinReset />} />
+<Route path="/profile/pin/reset/confirm" element={<ConfirmPinReset />} />
+
 
 <Route
   path="/profile/delete-account"

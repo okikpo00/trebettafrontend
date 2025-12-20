@@ -139,17 +139,31 @@ export default function Profile() {
         />
       </ProfileListSection>
 
-      {/* SETTINGS */}
-      <ProfileListSection title="Settings">
-        <ProfileListItem
-          label="Notifications"
-          onClick={() => navigate("/notifications")}
-        />
-        <ProfileListItem
-          label="Delete Account"
-          onClick={() => navigate("/profile/delete-account")}
-        />
-      </ProfileListSection>
+ {/* SETTINGS */}
+<ProfileListSection title="Security">
+  <ProfileListItem
+    label="Change Transaction PIN"
+    onClick={() => navigate("/profile/pin/change")}
+  />
+
+  <ProfileListItem
+    label="Forgot Transaction PIN"
+    onClick={() => navigate("/profile/pin/reset")}
+  />
+</ProfileListSection>
+
+<ProfileListSection title="Settings">
+  <ProfileListItem
+    label="Notifications"
+    onClick={() => navigate("/notifications")}
+  />
+  <ProfileListItem
+    label="Delete Account"
+    onClick={() => navigate("/profile/delete-account")}
+  />
+</ProfileListSection>
+
+
 
       {/* SUPPORT */}
       <ProfileListSection title="Support">

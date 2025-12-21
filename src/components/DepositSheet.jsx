@@ -64,11 +64,10 @@ export default function DepositSheet({ isOpen, onClose, onCreated, showToast }) 
           "/wallet/deposit/flutterwave/initiate",
           { amount: cleanAmount }
         );
-
-        if (res.data?.status && res.data.data?.payment_link) {
-          window.location.href = res.data.data.payment_link;
-          return;
-        }
+if (res?.status && res?.data?.payment_link) {
+  window.location.href = res.data.payment_link;
+  return;
+}
 
         setSheetError("Unable to start payment. Please try again.");
       } catch (err) {

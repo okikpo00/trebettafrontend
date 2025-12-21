@@ -154,7 +154,7 @@ export default function Register() {
 
           {/* Phone */}
           <div className={`field ${errors.phone ? "error" : ""}`}>
-            <label>Phone (optional)</label>
+            <label>Phone </label>
             <input
               className="input"
               placeholder="+2347012345678 or 07012345678"

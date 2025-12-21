@@ -5,7 +5,7 @@ const API_BASE_URL = "https://api.trebetta.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 60000,
   withCredentials: true, // refresh token cookie flows rely on this
 });
 

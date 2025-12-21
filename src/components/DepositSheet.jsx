@@ -51,34 +51,40 @@ export default function DepositSheet({ isOpen, onClose, onCreated, showToast }) 
     /* -------------------------------
        FLUTTERWAVE (INSTANT)
     -------------------------------- */
-    if (method === "flutterwave") {
-      // 🔴 MINIMUM VALIDATION
-      if (cleanAmount < FLW_MIN_AMOUNT) {
-        setSheetError("Minimum instant deposit is ₦500");
-        return;
-      }
+ /* -------------------------------
+   FLUTTERWAVE (INSTANT)
+-------------------------------- */
+if (method === "flutterwave") {
+  if (cleanAmount < FLW_MIN_AMOUNT) {
+    setSheetError("Minimum instant deposit is ₦500");
+    return;
+  }
 
-      setLoading(true);
-      try {
-        const res = await api.post(
-          "/wallet/deposit/flutterwave/initiate",
-          { amount: cleanAmount }
-        );
-if (res?.status && res?.data?.payment_link) {
-  window.location.href = res.data.payment_link;
-  return;
-}
+  setLoading(true);
+  try {
+    const res = await api.post(
+      "/wallet/deposit/flutterwave/initiate",
+      { amount: cleanAmount }
+    );
 
-        setSheetError("Unable to start payment. Please try again.");
-      } catch (err) {
-        setSheetError(
-          err?.response?.data?.message || "Failed to start payment"
-        );
-      } finally {
-        setLoading(false);
-      }
+    // ✅ CORRECT RESPONSE SHAPE
+    if (res?.status && res?.data?.payment_link) {
+      window.location.href = res.data.payment_link;
       return;
     }
+
+    console.error("FLW INIT BAD RESPONSE:", res);
+    setSheetError("Unable to start payment. Please try again.");
+  } catch (err) {
+    console.error("FLW INIT ERROR:", err);
+    setSheetError(
+      err?.response?.data?.message || "Failed to start payment"
+    );
+  } finally {
+    setLoading(false);
+  }
+  return;
+}
 
     /* -------------------------------
        MANUAL DEPOSIT (UNCHANGED)

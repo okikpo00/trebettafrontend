@@ -258,3 +258,45 @@
     background: rgba(255, 255, 255, 0.1);
   }
 }
+/* -------------------------------
+   WITHDRAW FEE BREAKDOWN
+-------------------------------- */
+
+.fee-breakdown {
+  margin-top: -4px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  .fee-breakdown {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.fee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fee-row + .fee-row {
+  margin-top: 6px;
+}
+
+.fee-row.total {
+  padding-top: 6px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .fee-row.total {
+    border-top-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.strong {
+  font-weight: 600;
+}

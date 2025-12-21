@@ -6,6 +6,9 @@ import BANKS from "../data/banks";
 import "../css/withdrawSheet.css";
 
 const MIN_WITHDRAW = 1000;
+// 🔹 ADDED: frontend-only withdraw fee config
+const WITHDRAW_FEE_RATE = 0.01; // 1%
+const WITHDRAW_FEE_CAP = 200;   // ₦200 max
 
 export default function WithdrawSheet({
   isOpen,
@@ -18,9 +21,15 @@ export default function WithdrawSheet({
   const [accountNumber, setAccountNumber] = useState("");
   const [accountName, setAccountName] = useState("");
   const [pin, setPin] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+// 🔹 ADDED: frontend-only fee calculation
+const numericAmount = Number(amount) || 0;
+const calculatedFee = Math.min(
+  Math.ceil(numericAmount * WITHDRAW_FEE_RATE),
+  WITHDRAW_FEE_CAP
+);
+const receiveAmount = Math.max(numericAmount - calculatedFee, 0);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -123,6 +132,25 @@ export default function WithdrawSheet({
                 placeholder="e.g. 5000"
               />
             </div>
+            {/* 🔹 ADDED: Fee breakdown (frontend-only) */}
+{numericAmount > 0 && (
+  <div className="fee-breakdown">
+    <div className="fee-row">
+      <span className="small muted">Withdrawal fee</span>
+      <span className="small">
+        ₦{calculatedFee.toLocaleString("en-NG")}
+      </span>
+    </div>
+
+    <div className="fee-row total">
+      <span className="small">You’ll receive</span>
+      <span className="small strong">
+        ₦{receiveAmount.toLocaleString("en-NG")}
+      </span>
+    </div>
+  </div>
+)}
+
 
             <div className="form-group">
               <label>Bank</label>

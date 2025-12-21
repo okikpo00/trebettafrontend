@@ -61,31 +61,48 @@ if (method === "flutterwave") {
   }
 
   setLoading(true);
+
   try {
+    console.log("[FLW][FRONTEND] Initiating deposit:", {
+      amount: cleanAmount
+    });
+
     const res = await api.post(
       "/wallet/deposit/flutterwave/initiate",
       { amount: cleanAmount }
     );
 
-    // ✅ CORRECT RESPONSE SHAPE
-    if (res?.status && res?.data?.payment_link) {
-      window.location.href = res.data.payment_link;
+    // 🔴 LOG FULL RESPONSE (THIS IS THE KEY)
+    console.log("[FLW][FRONTEND] Raw response:", res);
+
+    // Try all known shapes defensively
+    const paymentLink =
+      res?.data?.payment_link ||
+      res?.payment_link ||
+      res?.data?.data?.payment_link;
+
+    console.log("[FLW][FRONTEND] Extracted payment link:", paymentLink);
+
+    if (paymentLink) {
+      console.log("[FLW][FRONTEND] Redirecting to Flutterwave...");
+      window.location.href = paymentLink;
       return;
     }
 
-    console.error("FLW INIT BAD RESPONSE:", res);
+    console.error("[FLW][FRONTEND] No payment link found", res);
     setSheetError("Unable to start payment. Please try again.");
+
   } catch (err) {
-    console.error("FLW INIT ERROR:", err);
+    console.error("[FLW][FRONTEND] Request failed:", err);
     setSheetError(
       err?.response?.data?.message || "Failed to start payment"
     );
   } finally {
     setLoading(false);
   }
+
   return;
 }
-
     /* -------------------------------
        MANUAL DEPOSIT (UNCHANGED)
     -------------------------------- */
